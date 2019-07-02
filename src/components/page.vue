@@ -3,7 +3,7 @@
             <el-pagination
                 background
                 layout="prev, pager, next"
-                :current-page="currentPage"
+                :current-page.sync="currentPage"
                 :page-count='pageCount'
                 @current-change='currentPageHandle'
                 @prev-click='prevClick'
@@ -18,31 +18,36 @@
 export default {
     name: 'page',
     props:{
-        'pageCount':{
+        pageCount:{
             type: Number,
             default: 1
+        },
+        currentPageNum:{
+            type:Number,
+            default:1
         }
     },
     
     data () {
         return {
-            currentPage:0
+            currentPage:this.currentPageNum
         }
     },
     watch:{
         pageCount:function (val,old){
-            
+            this.currentPage = 1
             this.pageCount=val
-            
         }
+        
     },
     created(){
-        // this.getRoutePath();
         
+    },
+    mounted(){
     },
     methods:{
         currentPageHandle(e){
-            
+            this.currentPage = e
             this.$emit('page-change',e)
         },
         prevClick(e){

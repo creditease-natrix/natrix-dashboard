@@ -33,7 +33,7 @@ export default {
   },
   data() {
     return {
-      navPath: ["/login"],
+      navPath: ["/login","/register"],
       isShowMenu: "",
       isLogin: ""
     };

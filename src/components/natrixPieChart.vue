@@ -49,10 +49,12 @@ export default {
     data () {
         return {
             subtext: "数据来自Natrix",
+            pieChart:null
         }
     },
     mounted () {
         this.drawChart()
+        window.addEventListener("resize",this.resizeHandle)
     },
     watch: {
         chart_data: {
@@ -82,6 +84,11 @@ export default {
             })
             
             seriesData = chart_data.values
+            seriesData.forEach((item,index)=>{
+                if(typeof(item.value) == "number"){
+                    item.value = item.value.toFixed(2)
+                }
+            })
             let natrix_chart = this.$echarts.init(chart_dom, "macarons");
             let option = {
                 title : {
@@ -122,6 +129,7 @@ export default {
                 ]
             };
             natrix_chart.setOption(option=option,true)
+            this.pieChart  =  natrix_chart
         },
         /**
          * set container style
@@ -135,7 +143,13 @@ export default {
             
 
         },
+        resizeHandle(){
+            this.pieChart.resize()
+        }
 
+    },
+    destroyed(){
+        window.removeEventListener("resize",this.resizeHandle)
     }
 }
 </script>

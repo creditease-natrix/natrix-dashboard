@@ -18,16 +18,18 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
-                    <div class="col-xs-8">
-                    <div class="checkbox icheck">
-                        <label>
-                            <input type="checkbox"> 记住我
-                        </label>
-                    </div>
+                    <div class="col-xs-6">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox"> <span class="remind">记住我</span>
+                            </label>
+                        </div>
                     </div>
                     <!-- /.col -->
-                    <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>
+                    <div class="col-xs-6 btnBox">
+                    <!-- <button type="submit" class="btn btn-primary btn-block btn-flat" @click="login">登录</button> -->
+                        <el-button type="info" size="mini" @click="gotoRegister">注册</el-button>
+                        <el-button type="primary" size="mini" @click="login">登录</el-button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -45,18 +47,11 @@
 
 <script>
 let config = {
-    // baseURL: '/api/',
   timeout: 10000,
   withCredentials: true,
-    // `headers`选项是需要被发送的自定义请求头信息
   headers: {
-    // 'X-Requested-With': 'XMLHttpRequest',
-    // 'Cookie': 'sessionId=' + sessionId 
+   
   },
-  // transformRequest: [function (data) {  
-  //   // 需要序列化数据，数据放到formdata
-  //   return qs.stringify(data)
-  // }]
 }
 export default {
     name:'',
@@ -76,7 +71,7 @@ export default {
     methods: {
         login(){
            this.$post({
-              url: HP1+'/rbac/login',
+              url: HP1+'/rbac/login/v1',
               data:{
                   username:this.user,
                   password:this.pw
@@ -105,7 +100,13 @@ export default {
                }
                 
             }) 
+        },
+        gotoRegister(){
+            this.$router.push({
+                path:"register"
+            })
         }
+
     }
 };
 </script>
@@ -115,14 +116,17 @@ export default {
 body,html{
     height: 100%;
 }
-.wrapper{
-    overflow: visible;
-    height: 100%;
-}
+
 .login-page{
     height: 100%;
     position: relative;
     padding:7% 0 ;
+}
+.checkbox input{
+    margin-left:0 !important;
+}
+.checkbox .remind{
+    margin-left:15px;
 }
 </style>
 <style scoped>
@@ -138,9 +142,13 @@ body,html{
     padding: 0;
     width: 22px;
     height: 22px;
-    /* background: url("../../static/img/blue.png") no-repeat; */
     border: none;
     cursor: pointer;
 }
-
+.checkbox{
+    margin-top:0;
+}
+.btnBox{
+    text-align:right;
+}
 </style>

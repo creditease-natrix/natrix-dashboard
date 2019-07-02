@@ -71,6 +71,11 @@
               <span class="hidden-xs">登录</span>
             </a>
           </li>
+          <li class="dropdown user user-menu" v-if="this.user == '' " @click="registerHandle">
+            <a href="javascript:void(0);" class="dropdown-toggle">
+              <span class="hidden-xs">注册</span>
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -110,7 +115,6 @@ export default {
         url: HP1 + "/rbac/get/userinfo",
         data: {}
       }).then(res => {
-        if (res.permission) {
           if (res.data.code == 200) {
             this.user = res.data.user;
             window.localStorage.setItem("user", this.user);
@@ -121,7 +125,6 @@ export default {
             this.isLogin = false; //未登录
             window.localStorage.setItem("user", "");
           }
-        }
       });
     },
     showInfo() {
@@ -135,9 +138,14 @@ export default {
         path: "login"
       });
     },
+    registerHandle(){
+      this.$router.push({
+        path: "register"
+      });
+    },
     loginOut() {
       this.$get({
-        url: HP1 + "/rbac/logout",
+        url: HP1 + "/rbac/logout/v1",
         data: {}
       }).then(res => {
         if (res.permission) {
@@ -148,6 +156,11 @@ export default {
             });
             window.localStorage.setItem("user", "");
             window.location.href = NatrixIndex;
+          }else{
+            this.$message({
+              type:"error",
+              message:res.data.message
+            })
           }
         }
       });
@@ -191,16 +204,7 @@ export default {
 .dropdown-menu {
   display: block;
 }
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
 .main-header {
-  /* background: #409EFF; */
   background-color: #054353;
   color: #333;
   position: absolute;
@@ -226,15 +230,11 @@ a {
 a:hover {
   color: #333;
 }
-/* .nav>li>a:focus, .nav>li>a:hover{
-    background:none;
-} */
+
 .nav > li > a:hover .hidden-xs {
-  /* background:#000; */
   color: #333;
 }
 .nav > li > a:focus .hidden-xs {
-  /* background:#000; */
   color: #333;
 }
 </style>

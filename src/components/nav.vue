@@ -66,15 +66,9 @@ export default {
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+
+
 .main-header{
-    /* background: #409EFF; */
     background-color: #3c8dbc;
     color:#333;
     position: absolute;
@@ -89,9 +83,6 @@ a{
 a:hover{
   color:#fff;
 }
-/* .dropdown-toggle a:hover{
-    background:#fff;
-} */ 
 
 .navbar-nav>.user-menu>.dropdown-menu>li.user-header>p{
     color:#000;

@@ -1,4 +1,13 @@
 {
+  "running": "运行",
+  "expired": "过期",
+  "stoped": "关闭",
+  "private": "私有",
+  "public": "公共",
+  "1408": "终端接收超时",
+  "2408": "终端处理超时",
+  "exception": "异常",
+
   "packet_loss": "丢包率",
   "delay": "延时",
   "min_value": "最小值",
@@ -10,6 +19,7 @@
   "ping delay org analyse": "PING延时（组织分析）",
   "ping delay distribution org analyse": "PING延时时间段分布",
   "ping delay top org analyse": "PING延时TOP（组织分析）",
+
   "total_time": "总时间",
   "namelookup_time": "解析时间",
   "tcp_connect_time": "TCP连接时间",

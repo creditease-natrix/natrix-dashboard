@@ -55,10 +55,12 @@ export default {
     data () {
         return {
             subtext: "数据来自Natrix",
+            lineChart:null
         }
     },
     mounted () {
         this.drawChart(this.chart_data)
+        window.addEventListener("resize",this.resizeHandle)
     },
     watch: {
         chart_data: {
@@ -76,23 +78,46 @@ export default {
          */
         drawChart(chart_data){
             let name = [] , seriesData = [], xAxisData = chart_data['x-axis']
+            let startValue = xAxisData[0] ? xAxisData[0] :0 
             function precisionHandle(value){
-                return value.toFixed(2)
+                if(typeof(value) == "number"){
+                    return value.toFixed(2)
+                }
+                
             }
             chart_data.viewpoints.forEach((item,index)=>{
                 let values = item.values.map(precisionHandle)
                 name.push(this.$t(item.name))
-                seriesData.push({
-                    name:this.$t(item.name),
-                    type:'line',
-                    data:values
-                })
+                if(chart_data.stack){
+                    seriesData.push({
+                        name:this.$t(item.name),
+                        type:'line',
+                        stack:"总量",
+                        data:values
+                    })
+                }else{
+                    seriesData.push({
+                        name:this.$t(item.name),
+                        type:'line',
+                        data:values
+                    })
+                }
+                
             })
             
-            var dom = this.$refs.chart_body
-
+            let dom = this.$refs.chart_body
+            let dataZoom = {
+                dataZoom:[
+                            {
+                                startValue: startValue
+                            },
+                            {
+                                type: "inside"
+                            }
+                        ]
+            }
             
-            var myChart = this.$echarts.init(dom, "macarons");
+            let myChart = this.$echarts.init(dom, "macarons");
             let option = {
                 title: {
                     text: chart_data.title.text,
@@ -110,6 +135,7 @@ export default {
                     bottom: "3%",
                     containLabel: true
                 },
+                
                 toolbox: {
                     feature: {
                         dataView: { show: true, readOnly: false },
@@ -131,8 +157,13 @@ export default {
                 },
                 series: seriesData
             }
+            if(chart_data.dataZoom){
+                option = Object.assign(option,dataZoom)
+            }
+            console.log(option,"datazoom ")
 
             myChart.setOption(option = option,true);
+            this.lineChart = myChart
         },
         /**
          * set container style
@@ -146,7 +177,13 @@ export default {
             
 
         },
+        resizeHandle(){
+            this.lineChart.resize()
+        }
 
+    },
+    destroyed(){
+        window.removeEventListener("resize",this.resizeHandle)
     }
 }
 </script>

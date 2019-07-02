@@ -44,7 +44,7 @@
           </el-collapse-item>
         </el-collapse>
       </div>
-      <div id="orgaContent" v-if="active == 1">
+      <div id="orgaContent" v-if="active == -1">
         <el-collapse v-model="organizationActiveNames" @change="handleChange">
           <el-collapse-item title="DNS解析时间" name="1">
             <natrixLineChart 
@@ -62,7 +62,7 @@
           </el-collapse-item>
         </el-collapse>
       </div>
-      <div id="detailContent" v-if="active == 2">
+      <div id="detailContent" v-if="active == 1">
         <el-collapse v-model="activeNames" @change="handleChange">
             <el-collapse-item  name="1">
               <template slot="title">
@@ -189,13 +189,13 @@ export default {
           name: "地域分析",
           index: 0
         },
-        {
-          name: "组织分析",
-          index: 1
-        },
+        // {
+        //   name: "组织分析",
+        //   index: 1
+        // },
         {
           name: "详细信息",
-          index: 2
+          index: 1
         }
       ],
       areaActiveNames: ["1", "2", "3"],
@@ -314,34 +314,8 @@ export default {
   },
   mounted() {
     this.refreshAnalyseContent()
-    // 监听resize事件
-    window.addEventListener("resize",this.resizeHandle);
   },
   methods: {
-      //todo: remove
-      resizeHandle(){
-            if(this.active == 0){
-                //地域分析
-               let width = document.getElementById("areaContent").clientWidth
-               this.width = width
-               for(let i =0;i<this.areaCharts.length;i++){
-                    this.areaCharts[i].resize()
-                }
-            }
-            if(this.active == 1){
-                //组织分析
-                let width =  document.getElementsByClassName("pingContent")[0].clientWidth
-                var dom = document.getElementById("orgaContent");
-                var areaBoxs = dom.getElementsByClassName("areaBox");
-                for(var i =0 ;i<areaBoxs.length;i++){
-                    areaBoxs[i].style.width = width +'px'
-                }
-                for(let i =0;i<this.orgaCharts.length;i++){
-                    this.orgaCharts[i].resize()
-                }
-            }
-            
-      },
       handleChange(){
       },
       tabClick(index) {
@@ -357,12 +331,12 @@ export default {
               this.updateParseResultRegionDist()
               this.updateParseTimeRegionTop10()
               break
-            case 1:
+            case -1:
               this.updateParseTimeOrgAnalyse()
               this.updateParseTimeOrgDist()
               this.updateParseTimeOrgTop()
               break
-            case 2:
+            case 1:
               this.updateDetailData()
           }
       },
@@ -568,7 +542,6 @@ export default {
       }
   },
   destroyed(){
-    window.removeEventListener("resize",this.resizeHandle)
     clearInterval(this.timer)
   }
 };

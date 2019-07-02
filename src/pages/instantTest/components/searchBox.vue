@@ -453,21 +453,8 @@ export default {
     }
   },
   mounted() {
-    
-
     if (this.active == 1) {
-      if (this.authEditor == null){
-        let container1 = document.getElementById("authBox");
-        this.authEditor = this.initEditor(container1, this.options);
-      }
-      if(this.headerEditor == null){
-        let container2 = document.getElementById("headerBox");
-        this.headerEditor = this.initEditor(container2, this.options);
-      }
-      if(this.bodyEditor == null){
-        let container3 = document.getElementById("bodyBox");
-        this.bodyEditor = this.initEditor(container3, this.options);
-      }
+      this.init()
     }
   },
   watch: {
@@ -574,7 +561,6 @@ export default {
       } else {
         this.options = {
           mode: "text",
-          // modes: ['text', 'code'],
           mainMenuBar: false,
           onEditable: function(node) {
             if (!node.path) {
@@ -582,7 +568,7 @@ export default {
               // returning false makes the text area read-only
               return false;
             }
-          },
+          }
           
         };
       }
@@ -599,18 +585,7 @@ export default {
       this.authEditor = null
       this.headerEditor = null
       this.bodyEditor = null
-      if (this.authEditor == null) {
-        let container = document.getElementById("authBox");
-        this.authEditor = this.initEditor(container, this.options);
-      }
-      if (this.headerEditor == null) {
-        let container = document.getElementById("headerBox");
-        this.headerEditor = this.initEditor(container, this.options);
-      }
-      if (this.bodyEditor == null) {
-        let container = document.getElementById("bodyBox");
-        this.bodyEditor = this.initEditor(container, this.options);
-      }
+      this.init()
     }
   },
   methods: {
@@ -945,6 +920,20 @@ export default {
         this.httpObj.body_info = JSON.stringify(this.bodyEditor.get())
       }
       
+    },
+    init(){
+      if (this.authEditor == null){
+        let container1 = document.getElementById("authBox");
+        this.authEditor = this.initEditor(container1, this.options);
+      }
+      if(this.headerEditor == null){
+        let container2 = document.getElementById("headerBox");
+        this.headerEditor = this.initEditor(container2, this.options);
+      }
+      if(this.bodyEditor == null){
+        let container3 = document.getElementById("bodyBox");
+        this.bodyEditor = this.initEditor(container3, this.options);
+      }
     }
   },
   destroyed(){
@@ -978,7 +967,7 @@ export default {
   overflow: hidden;
   vertical-align: middle;
 }
-.el-switch {
+#filterBox .el-switch {
   float: right;
 }
 #stop .el-button {
@@ -1002,197 +991,5 @@ export default {
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.filterWrap {
-  position: relative;
-}
-.filterWrap .upTip {
-  height: 30px;
-  font-size: 12px;
-  line-height: 30px;
-  padding-left: 15px;
-  color: #000;
-  background: rgba(139, 195, 74, 0.52);
-  border-radius: 5px;
-}
-#filterBox {
-  margin: 15px 0 0;
-  position: relative;
-  border: 1px solid #ebebeb;
-  box-shadow: 0 0 8px rgba(232, 237, 250, 0.6);
-  border-radius: 5px;
-  padding: 20px;
-  background: #fff;
-}
-#filterBox .filterContainer {
-  border: 1px solid #ebebeb;
-  margin: 10px 10px;
-  padding: 10px 0;
-  border-radius: 5px;
-}
-.filterContainer .filterTitle {
-  font-size: 14px;
-  line-height: 30px;
-  border-bottom: 1px solid #ebebeb;
-  text-indent: 15px;
-}
-.filterContainer .filterList {
-  padding: 15px;
-}
-.filterList li {
-  font-size: 14px;
-  line-height: 30px;
-}
-.searchBar {
-  margin-bottom: 10px;
-}
-.icon-xiangshangjiantou {
-  color: #efb336;
-  position: absolute;
-  left: 50%;
-  bottom: -40px;
-  font-size: 40px;
-}
-.icon-xiangxiajiantou {
-  color: #efb336;
-  top: 10px;
-  position: absolute;
-  left: 50%;
-  font-size: 40px;
-}
-#resultBox {
-  float: left;
-  border: 1px solid #ebebeb;
-  box-shadow: 0 0 8px rgba(232, 237, 250, 0.6);
-  border-radius: 5px;
-  padding: 10px;
-  background: #fff;
-}
-#resultBox li {
-  width: 150px;
-  font-size: 14px;
-  line-height: 28px;
-  padding: 5px 8px;
-  border: 1px solid #ff980066;
-  box-shadow: 0 0 8px rgba(232, 237, 250, 0.6);
-  border-radius: 5px;
-  float: left;
-  margin-right: 8px;
-}
-#resultBox .icon {
-  font-size: 20px;
-  float: left;
-  width: 20%;
-  margin-top: 10px;
-}
-#resultBox .iconContent {
-  width: 70%;
-  float: right;
-}
-.iconContent strong {
-  font-weight: 500;
-  display: block;
-  font-size: 15px;
-  height: 20px;
-  line-height: 20px;
-  text-align: center;
-}
-.iconContent span {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 30px;
-  height: 30px;
-  margin-top: 10px;
-  display: block;
-  text-align: center;
-}
-.icon-xiafashuju {
-  color: #1296db;
-}
-.icon-responseOrder {
-  color: #be8dbd;
-}
-.icon-wuuiconxuan {
-  color: #2aa515;
-}
-.icon-cuowu {
-  color: #e16531;
-}
-#resultWrap {
-  margin-top: 30px;
-}
-#resultWrap #stop {
-  border: none;
-  float: left;
-  margin: 25px 0 0 10px;
-}
-.filterLabel {
-  width: 80px;
-}
-.filterItem {
-  margin-left: 10px;
-}
-.terminalItem {
-  width: 100%;
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
-}
-.terminalItem .cityName {
-  width: 100px;
-}
-.terminalItem .cityList {
-  width: 85%;
-}
-/* 协议配置 */
-.agreementContent {
-  padding: 10px 10px 0;
-}
-.pingAgreeList li {
-  font-size: 14px;
-  line-height: 30px;
-  height: 30px;
-  float: left;
-  margin: 0 20px 10px 0;
-}
-.pingAgreeList li .pingAgreelabel {
-  text-align: right;
-}
-.terminalCount {
-  display: inline-block;
-  margin-left: 10px;
-  margin-top: -5px;
-  vertical-align: middle;
-}
-.terminalAreaName {
-  font-size: 14px;
-  line-height: 28px;
-  display: block;
-  margin: 10px 0;
-}
-.icon-kaiqi1 {
-  color: #333;
-}
-.icon-kaiqi2 {
-  color: #2aa515;
-}
-#jsonEditorBox {
-  width: 100%;
-}
-#jsonEditorBox .title {
-  font-size: 14px;
-  line-height: 30px;
-}
-#jsonEditorBox .item {
-  width: 33.3%;
-  padding: 20px;
-  border: 1px solid #ddd;
-}
-#authBox{
-  margin-top:30px;
-}
-#headerBox{
-  margin-top:30px;
-}
-#bodyBox{
-  margin-top:30px;
-}
+@import "../../../../static/css/searchBox.css";
 </style>

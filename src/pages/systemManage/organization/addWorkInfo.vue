@@ -35,10 +35,10 @@
             </el-form-item>
             
             <el-form-item label="组织名称" prop="departmentName">
-                <el-input v-model="ruleForm.departmentName"  style="width:500px" placeholder="请输入组织名称"></el-input>
+                <el-input v-model="ruleForm.departmentName"   placeholder="请输入组织名称"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="comment">
-                <el-input v-model="ruleForm.comment" type="textarea" style="width:500px" placeholder="请输入备注信息"></el-input>
+                <el-input v-model="ruleForm.comment" type="textarea" placeholder="请输入备注信息"></el-input>
             </el-form-item>
             <el-form-item label="组织地址信息" >
                 <el-button type="primary" 
@@ -1575,10 +1575,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
+@import "../../../../static/css/resetEle.css";
 #firstLabel .el-form-item__label{
     line-height:50px;
 }
+
 </style>
 <style scoped>
 .selectBox .el-select{

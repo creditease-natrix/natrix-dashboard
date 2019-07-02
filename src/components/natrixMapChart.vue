@@ -60,12 +60,14 @@ export default {
                 "warning": "#FF0000",
                 "fine": "#FFA500",
                 "excellent": "#008B00"
-            }
+            },
+            mapChart:null
         }
     },
     mounted () {
         this.resetStyleConfiguration()
         this.drawChart()
+        window.addEventListener("resize",this.resizeHandle)
     },
     watch: {
         chart_data: {
@@ -102,7 +104,7 @@ export default {
         convertRegionName(data){
             let res = []
             function omitRegionUnit(name){
-                let regExpress = new RegExp("[省市]$")
+                let regExpress = new RegExp(/省|市|自治区/g)
                 return name.replace(regExpress, "")
             }
             data.forEach(item=>{
@@ -224,8 +226,15 @@ export default {
 
             option = Object.assign(option, style_option)
             natrix_chart.setOption(option=option,true)
+            this.mapChart = natrix_chart
+        },
+        resizeHandle(){
+            this.mapChart.resize()
         }
 
+    },
+    destroyed(){
+        window.removeEventListener("resize",this.resizeHandle)
     }
 }
 </script>

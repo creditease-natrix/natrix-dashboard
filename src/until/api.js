@@ -73,7 +73,8 @@ export const get = option => {
         if (response.data.permission) {
           return response.data;
         } else {
-          rootvue.$message.error("您当前尚未登录，请先登录查看");
+          rootvue.$message.error("您当前尚未登录，请先登录查看")
+          window.location.href = NatrixIndex
           return false;
         }
       } else {
@@ -98,6 +99,7 @@ export const post = option => {
           return response.data;
         } else {
           rootvue.$message.error("您当前尚未登录，请先登录查看");
+          window.location.href = NatrixIndex
           return false;
         }
       } else {
@@ -118,11 +120,11 @@ export const put = option => {
   return axios
     .put(url, data, config)
     .then(response => {
-      console.log(response, "put");
       if (response.status == 200) {
         if (response.data.permission) {
           return response.data;
         } else {
+          window.location.href = NatrixIndex
           return false;
         }
       } else {
@@ -149,7 +151,8 @@ export const deleteMethod = option => {
         if (response.data.permission) {
           return response.data;
         } else {
-          rootvue.$message.error("您当前尚未登录，请先登录查看");
+          rootvue.$message.error("您当前尚未登录，请先登录查看")
+          window.location.href = NatrixIndex
           return false;
         }
       } else {

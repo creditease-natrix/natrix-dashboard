@@ -1,7 +1,7 @@
 //natrix Pie Chart: 
 
 <template>
-    <div class="natrix-chart-container"  ref="chart_continer">
+    <div class="natrix-chart-container"  ref="chart_container">
         <div class="areaBox" ref="chart_body">
         </div>
     </div>
@@ -56,10 +56,12 @@ export default {
     data () {
         return {
             subtext: "数据来自Natrix",
+            barChart:null
         }
     },
     mounted () {
         this.drawChart(this.chart_data)
+        window.addEventListener("resize",this.resizeHandle)
     },
     watch: {
         chart_data: {
@@ -92,9 +94,9 @@ export default {
                 })
             })
             
-            var dom = this.$refs.chart_body
+            let dom = this.$refs.chart_body
             
-            var myChart = this.$echarts.init(dom, "macarons");
+            let myChart = this.$echarts.init(dom, "macarons");
             let option = {
                 title: {
                     text: chart_data.title.text,
@@ -148,6 +150,7 @@ export default {
             }
 
             myChart.setOption(option = option,true);
+            this.barChart = myChart
         },
         /**
          * set container style
@@ -157,11 +160,14 @@ export default {
                 style_data = this.default_chart_style
             }
             var container_dom = this.$refs.chart_container
-
-            
-
         },
+        resizeHandle(){
+            this.barChart.resize()
+        }
 
+    },
+    destroyed(){
+        window.removeEventListener("resize",this.resizeHandle)
     }
 }
 </script>

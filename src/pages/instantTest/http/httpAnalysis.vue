@@ -34,7 +34,7 @@
                     </el-collapse-item>
                 </el-collapse>
             </div>
-            <div id="organizationContent" v-if="active == 1">
+            <div id="organizationContent" v-if="active == -1">
                 <el-collapse v-model="organizationActiveNames" @change="handleChange">
                     <el-collapse-item title="HTTP时延（组织分析）" name="1">
                         <natrixLineChart :chart_data="organization_delayData"></natrixLineChart>
@@ -45,7 +45,7 @@
                     
                 </el-collapse>
             </div>
-            <div id="multibleContent" v-if="active == 2">
+            <div id="multibleContent" v-if="active == 1">
                 <el-collapse v-model="resultActiveNames" @change="handleChange">
                     <el-collapse-item title="请求结果分布（组织分析）" name="1">
                         <natrixPieChart :chart_data="organization_resultData"></natrixPieChart>
@@ -56,7 +56,7 @@
                     
                 </el-collapse>
             </div>
-            <div id="detailContent" v-if="active == 3">
+            <div id="detailContent" v-if="active == 2">
                 <el-collapse v-model="activeNames" @change="handleChange">
                     <el-collapse-item  name="1">
                         <template slot="title">
@@ -281,17 +281,17 @@ export default {
                     name:'地域分析',
                     index:0
                 },
+                // {
+                //     name:'组织分析',
+                //     index:1
+                // },
                 {
-                    name:'组织分析',
+                    name:'综合分析',
                     index:1
                 },
                 {
-                    name:'综合分析',
-                    index:2
-                },
-                {
                     name:'详细信息',
-                    index:3
+                    index:2
                 },
                 
             ],
@@ -410,45 +410,10 @@ export default {
     },
     mounted(){
         
-        // 监听resize事件
-        window.addEventListener("resize",this.resizeHandle);
-        
+        this.refreshAnalyseContent()
     },
     methods: {
-        resizeHandle(){
-            if(this.active == 0){
-                //地域分析
-               let width = document.getElementById("areaContent").clientWidth
-               this.width = width
-               for(let i =0;i<this.areaCharts.length;i++){
-                    this.areaCharts[i].resize()
-                }
-            }
-            if(this.active == 1){
-                //组织分析
-                let width =  document.getElementsByClassName("pingContent")[0].clientWidth
-                var dom = document.getElementById("organizationContent");
-                var areaBoxs = dom.getElementsByClassName("areaBox");
-                for(var i =0 ;i<areaBoxs.length;i++){
-                    areaBoxs[i].style.width = width +'px'
-                }
-                for(let i =0;i<this.orgaCharts.length;i++){
-                    this.orgaCharts[i].resize()
-                }
-            }
-            if(this.active == 2){
-                //综合分析
-                let width =  document.getElementsByClassName("pingContent")[0].clientWidth
-                var dom = document.getElementById("multibleContent");
-                var areaBoxs = dom.getElementsByClassName("areaBox");
-                for(var i =0 ;i<areaBoxs.length;i++){
-                    areaBoxs[i].style.width = width +'px'
-                }
-                for(let i =0;i<this.multibleCharts.length;i++){
-                    this.multibleCharts[i].resize()
-                }
-            }
-        },
+        
         
         handleClick(tab, event) {
             
@@ -459,15 +424,15 @@ export default {
                     case 0:
                         this.getDelayRegionData(this.taskId)
                         break;
-                    case 1:
+                    case -1:
                         this.getDelayRegionData(this.taskId)
                         this.getDelayDistributionData(this.taskId)
                         break;
-                    case 2:
+                    case 1:
                         this.getResultData(this.taskId)
                         this.getPerformanceData(this.taskId)
                         break;
-                    case 3:
+                    case 2:
                         this.getDetailData(this.taskId)
                         break;
 

@@ -3,6 +3,7 @@
     <div class="selectBox" >
         <!-- <span>省/直辖市：</span> -->
         <el-select 
+        :disabled="disabled"
         size="mini"
         v-model="province" 
         @change="getCityList()"
@@ -16,6 +17,7 @@
         </el-select>
         <!-- <span>市/区：</span> -->
         <el-select 
+        :disabled="disabled"
         v-model="city" 
         size="mini"
         @change="emitResponse()"
@@ -35,20 +37,47 @@
 <script>
 export default {
     name: "regionSelect",
-    data () {
-        return {
-          provinces:[],
-          cities:[{
-              value: "all",
-              label: "全部"
-          }],
-
-          province: "all",
-          city: "all"
+    props:{
+        disabled:{
+            type:Boolean,
+            default:false
+        },
+        provinceValue:{
+            type:String,
+            default:"all"
+        },
+        cityValue:{
+            type:String,
+            default:"all"
         }
     },
+    data () {
+        return {
+            provinces:[{
+                value: "all",
+                label: "全部"
+            }],
+            cities:[{
+                value: "all",
+                label: "全部"
+            }],
+
+            province: this.provinceValue,
+            city: this.cityValue
+        }
+    },
+    created(){
+        
+    },
     mounted(){
-       this.initComponent()
+        if(!this.disabled){
+            this.initComponent()
+            if(this.province != "all"){
+                this.getCityList()
+
+            }
+        }
+        
     },
     methods:{
         initComponent(){
@@ -76,6 +105,7 @@ export default {
                             label:item
                         })
                     })
+
                 }
             })
         },
@@ -112,5 +142,6 @@ export default {
             ])
         }
     },
+    
 }
 </script>

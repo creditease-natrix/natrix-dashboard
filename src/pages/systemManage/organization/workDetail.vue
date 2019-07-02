@@ -544,7 +544,6 @@ export default {
                     id:id
                 }
             }).then(res=>{
-                console.log(res)
                 if(res.data.code == 200){
                     this.siteForm = res.data.info
                 }

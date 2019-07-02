@@ -63,22 +63,5 @@ let rootvue = new Vue({
 });
 export default rootvue;
 
-// axios.interceptors.request.use(function (config,next) {
-//   // 在发送请求之前做些什么
-//   console.log(config)
-//   let sessionid=localStorage.getItem('sessionId')
-//   if (sessionid) {
-//     //如果请求时TOKEN存在,就为每次请求的headers中设置好TOKEN,后台根据headers中的TOKEN判断是否放行
-//     request.headers.set('sessionid', sessionid)
-//   }
-//     // return config;
-//     next((response) => {
-//       return response
-//     })
-//   }, function (error) {
-//     // 对请求错误做些什么
-//     return Promise.reject(error);
-//   }
 
-// );
-//axios 对http请求响应作拦截
+

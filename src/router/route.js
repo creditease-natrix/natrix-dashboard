@@ -1,13 +1,14 @@
 
 const login = () => import ('../pages/registration/login.vue')  //登录
+const register = () => import ("../pages/registration/register.vue")
 
 // 终端管理
 import terminalOverview from '../pages/systemManage/terminal/terminalOverview.vue'
 const terminalList = () => import ('../pages/systemManage/terminal/terminalList.vue')
 const terminalDetail = () => import("../pages/systemManage/terminal/terminalDetail.vue")
-const terminalSite = () => import("../pages/systemManage/terminal/terminalSite.vue");
-const editTerminal = () => import("../pages/systemManage/terminal/editTerminal.vue");
-const terminalCheckList = () =>import("../pages/systemManage/terminal/terminalCheckList.vue");
+const terminalSite = () => import("../pages/systemManage/terminal/terminalSite.vue")
+const editTerminal = () => import("../pages/systemManage/terminal/editTerminal.vue")
+const terminalCheckList = () =>import("../pages/systemManage/terminal/terminalCheckList.vue")
 //职场管理——Organization
 import workInfoManage from  '../pages/systemManage/organization/workInfoManage.vue'
 const  addWorkInfo = () => import('../pages/systemManage/organization/addWorkInfo.vue')
@@ -21,10 +22,19 @@ const  broadBandDetail = () => import ('../pages/systemManage/organization/broad
 import pingAnalysis from '../pages/instantTest/ping/pingAnalysis.vue' // ping
 import httpAnalysis from '../pages/instantTest/http/httpAnalysis.vue' // http
 import tracerouteAnalysis from '../pages/instantTest/traceroute/tracerouteAnalysis.vue' //transroute
-import dnsAnalysis from "../pages/instantTest/dns/dnsAnalysis.vue"; //dns
+import dnsAnalysis from "../pages/instantTest/dns/dnsAnalysis.vue" //dns
+//定时测任务管理
+import timedTaskList from "../pages/regularTest/taskManage/timedTaskList.vue"
+import focusTask from "../pages/regularTest/taskManage/focusTask.vue"
+import addTask from "../pages/regularTest/taskManage/addTask.vue"
+import editTask from "../pages/regularTest/taskManage/editTask.vue"
+import taskInfo from "../pages/regularTest/taskManage/taskInfo.vue"
+//任务分析
+import timedAnalysis from "../pages/regularTest/taskAnalysis/timedAnalysis.vue";
 
 let routes = [
   { path: "/login", name: "login", component: login },
+  { path: "/register", name: "register", component: register },
 
   // 终端管理相关页面
   {
@@ -124,7 +134,43 @@ let routes = [
     name: "dnsAnalysis",
     component: dnsAnalysis
   },
-  
+  //定时测任务管理
+  {
+    path: "/timedTaskList",
+    name: "timedTaskList",
+    component: timedTaskList,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/focusTask",
+    name: "focusTask",
+    component: focusTask,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/addTask",
+    name: "addTask",
+    component: addTask,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/editTask",
+    name: "editTask",
+    component: editTask,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/taskInfo",
+    name: "taskInfo",
+    component: taskInfo,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/timedAnalysis",
+    name: "timedAnalysis",
+    component: timedAnalysis,
+    meta: { requireAuth: true }
+  }
 ];
 
 export default routes

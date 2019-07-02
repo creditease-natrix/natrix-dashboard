@@ -240,9 +240,7 @@ export default {
 }
 </script>
 <style>
-/* #workPlaceComponent el-select--mini{
-    width:150px;
-} */
+
 .el-select--mini{
     width:150px;
 }
