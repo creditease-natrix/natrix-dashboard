@@ -10,12 +10,15 @@
 
                 
                 <div class="form-group has-feedback">
-                    <input name="username" v-model="user" type="text" class="form-control" placeholder="用户名" >
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    <!-- <input name="username" v-model="user" type="text" class="form-control" placeholder="用户名" > -->
+                    <el-input placeholder="用户名" v-model="user" clearable size="mini"></el-input>
+                    <!-- <span class="glyphicon glyphicon-envelope form-control-feedback"></span> -->
                 </div>
                 <div class="form-group has-feedback">
-                    <input name="password" v-model="pw" type="password" class="form-control" placeholder="密码">
-                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    <!-- <input name="password" v-model="pw" type="password" class="form-control" placeholder="密码"> -->
+                    <el-input placeholder="请输入密码" type="password" v-model="pw"   show-password size="mini"></el-input>
+                    <!-- <i slot="suffix" title="显示密码" style="cursor:pointer;" class="icon iconfont icon-xianshi1"></i>
+                    <i slot="suffix" title="隐藏密码" style="cursor:pointer;" class="icon iconfont icon-yincang1"></i> -->
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
@@ -27,18 +30,14 @@
                     </div>
                     <!-- /.col -->
                     <div class="col-xs-6 btnBox">
-                    <!-- <button type="submit" class="btn btn-primary btn-block btn-flat" @click="login">登录</button> -->
                         <el-button type="info" size="mini" @click="gotoRegister">注册</el-button>
                         <el-button type="primary" size="mini" @click="login">登录</el-button>
                     </div>
-                    <!-- /.col -->
                 </div>
                 
-                <!-- <a href="#">忘记密码？</a><br>
-                <a href="register.html" class="text-center">注册</a> -->
+               
 
             </div>
-        <!-- /.login-box-body -->
         </div>
     </div>
     
@@ -62,7 +61,8 @@ export default {
 
       return {
         user:'',
-        pw:''
+        pw:'',
+        input:""
       };
     },
     mounted(){
@@ -91,11 +91,7 @@ export default {
                         window.location.href=NatrixIndex
                         
                     }else{
-                        this.$message({
-                            showClose: true,
-                            message: res.data.message,
-                            type:'error'
-                        });
+                        messageTip("error",this.$t(res.data.message))
                     }
                }
                 

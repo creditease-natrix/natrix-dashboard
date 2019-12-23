@@ -7,7 +7,11 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "commitmsg": "validate-commit-msg",
+    "commit": "git-cz ",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+
   },
   "dependencies": {
     "aws-sdk": "^2.312.0",
@@ -61,7 +65,11 @@
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-cli": "^3.1.2",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "commitizen": "^2.3.0",
+    "validate-commit-msg": "^2.11.1",
+    "conventional-changelog-cli": "^1.2.0",
+    "husky": "^0.13.1"
   },
   "engines": {
     "node": ">= 6.0.0",

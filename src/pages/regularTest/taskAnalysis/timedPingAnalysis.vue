@@ -4,9 +4,7 @@
             <el-collapse v-model="areaActiveNames">
                 <el-collapse-item title="PING丢包（地域分析）" name="1">
                     <natrixMapChart 
-                    v-loading="packetLossLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :mapChartLoading="packetLossLoading"
                     ref="map"
                     :chart_data="ping_packetLoss"
                     :chart_style="this.packetLossRange">
@@ -14,9 +12,7 @@
                 </el-collapse-item>
                 <el-collapse-item title="ping时延（地域分析）" name="2">
                     <natrixMapChart 
-                    v-loading="delayLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :mapChartLoading="delayLoading"
                     ref="map"
                     :chart_data="ping_Delay"
                     :chart_style="this.pingDelayRange">
@@ -28,25 +24,19 @@
             <el-collapse v-model="areaTimeNames">
                 <el-collapse-item title="PING丢包（时间分析）" name="1">
                     <natrixLineChart 
-                    v-loading="packetLossTimeLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :lineChartLoading="packetLossTimeLoading"
                     :chart_data="ping_packetLossTime">
                     </natrixLineChart>
                 </el-collapse-item>
                 <el-collapse-item title="ping时延（时间分析）" name="2">
                     <natrixLineChart
-                    v-loading="delayTimeLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading" 
+                    :lineChartLoading="delayTimeLoading"
                     :chart_data="ping_DelayTime">
                     </natrixLineChart>
                 </el-collapse-item>
                 <el-collapse-item title="ping异常（时间分析）" name="3">
                     <natrixLineChart 
-                    v-loading="errorTimeLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :lineChartLoading="errorTimeLoading"
                     :chart_data="ping_ErrorTime"></natrixLineChart>
                 </el-collapse-item>
             </el-collapse>
@@ -54,10 +44,8 @@
         <div v-if="active == 2">
             <el-collapse v-model="areaNames">
                 <el-collapse-item title="PING时延分布（综合分析）" name="1">
-                    <natrixLineChart 
-                    v-loading="defaultLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    <natrixLineChart
+                    :lineChartLoading="defaultLoading" 
                     :chart_data="ping_DefaultData"></natrixLineChart>
                 </el-collapse-item>
             </el-collapse>
@@ -159,8 +147,8 @@ export default {
                     }
                 ],
                 "x-axis": [],
-                dataZoom:true,//是否增加浮标
-                stack:true//是否堆叠
+                log:false,
+                logBase:10
             },
             ping_ErrorTime:{
                 title:{
@@ -174,7 +162,8 @@ export default {
                         name: ""
                     }
                 ],
-                "x-axis": []
+                "x-axis": [],
+                precision:0,
             },
             ping_DefaultData:{
                 title:{
@@ -188,7 +177,10 @@ export default {
                         name: ""
                     }
                 ],
-                "x-axis": []
+                "x-axis": [],
+                dataZoom:true,//是否增加浮标
+                stack:true,//是否堆叠
+                precision:0
             }
         };
     },
@@ -203,28 +195,12 @@ export default {
     },
     methods: {
         updateInfo(obj){
-            // switch(this.active){
-            //     case 0 :
-            //         this.getRegionPacketloss(obj)
-            //         this.getRegionDelay(obj)
-            //         break;
-            //     case 1 :
-            //         this.getTimePacketloss(obj)
-            //         this.getTimeDelay(obj)
-            //         this.getTimeError(obj)
-            //         break;
-            //     case 2 :
-            //         this.getDefaultDelay(obj)
-            //         break;
-            // }
             this.getRegionPacketloss(obj)
             this.getRegionDelay(obj)
             this.getTimePacketloss(obj)
             this.getTimeDelay(obj)
             this.getTimeError(obj)
             this.getDefaultDelay(obj)
-            
-            
         },
         getRegionPacketloss(obj){
             let view_point = "region"
@@ -249,7 +225,6 @@ export default {
                 url:HP1+"/benchmark/timed/analyse/v1",
                 data:data
             }).then(res=>{
-                
                 if(res.data.code == 200){
                     this.delayLoading = false
                     this.ping_Delay.values = res.data.info.values

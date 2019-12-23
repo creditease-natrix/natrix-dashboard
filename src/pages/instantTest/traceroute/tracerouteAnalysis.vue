@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <instantNav :active="2"></instantNav>
-    <searchBox :active="2" v-on:getTaskStatus="getTaskInfo"></searchBox>
+    <searchBox :active="'Traceroute'" v-on:getTaskStatusHandle="getTaskInfo"></searchBox>
     <div class="pingContent">
       <div class="pingNavBox">
         <ul class="pingNav clear">
@@ -124,7 +124,7 @@
 import instantNav from "../../../components/instantNav.vue";
 import searchBox from "../components/searchBox.vue";
 import errorinfoTable from "../components/errorinfoTable.vue"
-import { intercept } from '../../../until/index.js';
+import { intercept,messageTip } from '../../../until/index.js';
 
 export default {
   name: "",
@@ -162,6 +162,7 @@ export default {
             this.getTraceRouteData()
           },5*1000)
         }else{
+          this.getTraceRouteData()
           clearInterval(this.timer)
         }
 
@@ -199,12 +200,8 @@ export default {
               this.generateTableData(data)
               this.errorTableData = res.data.info.error
             }else{
-              this.$message({
-                type:'error',
-                message:res.data.message
-              })
+              messageTip("error",this.$t(res.data.message))
             }
-
           })
       },
       copyDeep(templateData){

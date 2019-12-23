@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="searchBar" id="searchBox">
-      <el-select v-if="active == 1" size="medium" v-model="httpMethod" placeholder="请选择">
+      <el-select v-if="active == 'HTTP' " size="medium" v-model="httpMethod" placeholder="请选择">
         <el-option
           v-for="(item,index) in httpMethodSelect"
           :key="index"
@@ -13,7 +13,7 @@
       <el-button
         type="primary"
         size="medium"
-        @click="createTask"
+        @click="createTask(taskStatus)"
         :disabled="taskStatusObj.resultLoading"
       >检测一下</el-button>
       <el-button
@@ -34,208 +34,25 @@
           <h4 class="filterTitle">
             <span>终端配置</span>
           </h4>
-          <ul class="filterList">
-            <li class="clear">
-              <span class="fl filterLabel">过滤方式：</span>
-              <div class="fl filterItem">
-                <el-radio-group v-model="form.filterType">
-                  <el-radio :label="1">地域选择</el-radio>
-                  <el-radio :label="2">组织选择</el-radio>
-                </el-radio-group>
-              </div>
-            </li>
-            <li class="clear">
-              <span class="fl filterLabel">过滤条件：</span>
-              <div class="fl filterItem">
-                <regionSelect v-on:selectList="getCityHandle" v-if="form.filterType == 1 "></regionSelect>
-                <organizationSelect
-                  v-on:getParentId="getParentIdHandle"
-                  v-if="form.filterType == 2 "
-                ></organizationSelect>
-              </div>
-            </li>
-            <li class="clear">
-              <span class="fl filterLabel">网络选择：</span>
-              <div class="fl filterItem">
-                <el-checkbox v-model="checkAllNet">全选</el-checkbox>
-                <el-checkbox-group v-model="checkedNets" @change="handleCheckedNetChange">
-                  <el-checkbox v-for="net in netOptions" :label="net" :key="net" disabled>{{net}}</el-checkbox>
-                </el-checkbox-group>
-              </div>
-            </li>
-            <li class="clear">
-              <span class="fl filterLabel">ISP选择：</span>
-              <div class="fl filterItem">
-                <el-checkbox v-model="checkAllIsp">全选</el-checkbox>
-                <el-checkbox-group v-model="checkedIsps" @change="handleCheckedIspChange">
-                  <el-checkbox v-for="isp in ispOptions" :label="isp" :key="isp" disabled>{{isp}}</el-checkbox>
-                </el-checkbox-group>
-              </div>
-            </li>
-            <li class="clear">
-              <span class="fl filterLabel">终端选择：</span>
-              <div class="fl filterItem">
-                <el-radio-group v-model="terminal">
-                  <el-radio :label="1">
-                    <span>全部</span>
-                  </el-radio>
-                  <el-radio :label="2">
-                    <span @click="showTerminalDialog">特定终端</span>
-                  </el-radio>
-                </el-radio-group>
-                <span class="terminalCount">存在{{terminalCount}}个终端</span>
-              </div>
-            </li>
-          </ul>
+          <terminalConfig ref="terminalConfig"></terminalConfig>
         </div>
         <div class="agreement filterContainer">
-          <div v-if="active == 0">
-            <h4 class="filterTitle">
-              <span>协议配置</span>
-              <el-switch v-model="pingSwitch" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-            </h4>
-            <div class="agreementContent">
-              <ul class="pingAgreeList clear">
-                <li>
-                  <span class="pingAgreelabel">超时时间(s)：</span>
-                  <el-input
-                    v-model="pingObj.timeout"
-                    size="mini"
-                    placeholder="请输入超时时间"
-                    :disabled="!pingSwitch"
-                  ></el-input>
-                </li>
-                <li>
-                  <span class="pingAgreelabel">发送次数(次)：</span>
-                  <el-input
-                    v-model="pingObj.count"
-                    size="mini"
-                    placeholder="请输入发送次数"
-                    :disabled="!pingSwitch"
-                  ></el-input>
-                </li>
-                <li>
-                  <span class="pingAgreelabel">数据包（字节）：</span>
-                  <el-input
-                    v-model="pingObj.packet_size"
-                    size="mini"
-                    placeholder="请输入大小"
-                    :disabled="!pingSwitch"
-                  ></el-input>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div v-if="active == 1">
-            <h4 class="filterTitle">
-              <span>协议配置</span>
-              <el-switch v-model="httpSwitch" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-            </h4>
-            <div class="agreementContent">
-              <ul class="pingAgreeList clear">
-                <li>
-                  <span class="pingAgreelabel">协议选择：</span>
-                  <el-radio
-                    v-model="httpObj.is_default"
-                    label="HTTP1.1"
-                    :disabled="!httpSwitch"
-                  >HTTP1.1</el-radio>
-                </li>
-                <li>
-                  <span class="pingAgreelabel">超时时间（s)：</span>
-                  <el-input
-                    v-model="httpObj.timeout"
-                    size="mini"
-                    placeholder="请输入超时时间"
-                    :disabled="!httpSwitch"
-                  ></el-input>
-                </li>
-                <li>
-                  <span class="pingAgreelabel">允许重定向：</span>
-                  <el-switch
-                    v-model="httpObj.is_redirect"
-                    :disabled="!httpSwitch"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                  ></el-switch>
-                </li>
-                <li>
-                  <span class="pingAgreelabel">最大重定向数：</span>
-                  <el-input
-                    v-model="httpObj.redirect_count"
-                    :disabled="!httpSwitch || !httpObj.is_redirect"
-                    placeholder="请输入数量"
-                    type="number"
-                    size="mini"
-                  ></el-input>
-                </li>
-                <li>
-                  <span class="pingAgreelabel">页面快照：</span>
-                  <el-switch
-                    :disabled="!httpSwitch"
-                    v-model="httpObj.is_snap"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                  ></el-switch>
-                </li>
-              </ul>
-              <div id="jsonEditorBox" class="clear">
-                <div class="fl item">
-                  <h4 class="title">
-                    认证(Authorization)
-                    <el-tooltip placement="top" effect="light">
-                      <div slot="content">目前，仅支持basic类型的安全验证.<br/>basic类型，格式如下:<br/>
-                      {
-                        'auth_type': 'basic',
-                        'auth_user': '{username}:{password}'
-                      }</div>
-                      <span class="el-icon-question"></span>
-                    </el-tooltip>
-                  </h4>
-                  <div id="authBox"></div>
-                </div>
-                <div class="fl item">
-                  <h4 class="title">头部(headers)</h4>
-                  <div id="headerBox"></div>
-                </div>
-                <div class="fl item">
-                  <h4 class="title">主体(Body)</h4>
-                  <div id="bodyBox"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-if="active == 3">
-            <h4 class="filterTitle">
-              <span>协议配置</span>
-              <el-switch v-model="dnsSwitch" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-            </h4>
-            <div class="agreementContent">
-              <ul class="pingAgreeList clear">
-                <li>
-                  <span class="pingAgreelabel">DNS设置：</span>
-                  <el-radio v-model="dnsObj.is_default" label="true" :disabled="!dnsSwitch">默认</el-radio>
-                  <el-radio v-model="dnsObj.is_default" label="false" :disabled="!dnsSwitch">自定义</el-radio>
-                  <el-input
-                    v-model="dnsObj.dns_server"
-                    size="mini"
-                    placeholder="请输入IP地址"
-                    :disabled="dnsObj.is_default == 'true' "
-                  ></el-input>
-                </li>
-                <li>
-                  <span class="pingAgreelabel">超时时间(s)：</span>
-                  <el-input
-                    v-model="dnsObj.timeout"
-                    size="mini"
-                    placeholder="请输入超时时间"
-                    :disabled="!dnsSwitch"
-                  ></el-input>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <h4 class="filterTitle">
+            <span>协议配置</span>
+            <el-switch
+              v-model="protocolSwitch"
+              :active-value="true"
+              :inactive-value="false"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            ></el-switch>
+          </h4>
+          <protocolConfig
+            ref="protocolConfig"
+            :protocolConfig="{}"
+            :active="active"
+            :disabled="!protocolSwitch"
+          ></protocolConfig>
         </div>
       </div>
       <i
@@ -282,116 +99,68 @@
         </li>
       </ul>
       <div id="stop">
-        <el-button size="medium" v-show="taskStatusObj.resultLoading" @click="stopTask">结束</el-button>
+        <el-button size="medium" v-show="taskStatusObj.resultLoading" @click="stopTaskHandle">结束</el-button>
       </div>
-    </div>
-    <div id="terminalDialog">
-      <el-dialog title="终端选择" :visible.sync="terminalDialogVisible">
-        <el-checkbox
-          :indeterminate="isIndeterminate"
-          v-model="checkAllTerminal"
-          @change="terminalhandleCheckAllChange"
-        >全选</el-checkbox>
-        <div style="margin: 15px 0;"></div>
-        <div v-for="(item,index) in terminals" :key="index" class="clear terminalItem">
-          <span class="fl cityName">{{item.name}}</span>
-          <el-checkbox-group
-            v-model="checkedTerminals"
-            @change="handleCheckedTerminalsChange"
-            class="fl cityList"
-          >
-            <el-checkbox
-              v-for="(item1,index1) in item.terminals"
-              :label="item1"
-              :key="index1"
-            >{{item1.name}}</el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import organizationSelect from "../../../components/organizationSelect.vue";
+import { messageTip } from "../../../until/index.js";
+// import organizationSelect from "../../../components/organizationSelect.vue";
 import regionSelect from "../../../components/regionSelect.vue";
-let netOptions = ["有线", "无线", "移动"];
-let ispOptions = ["电信", "移动", "联通", "校园网"];
 const cityOptions = ["上海", "北京", "广州", "深圳"];
+import terminalConfig from "../../regularTest/taskManage/components/terminalConfig.vue";
+import protocolConfig from "../../regularTest/taskManage/components/protocolConfig.vue";
 export default {
   name: "searchBox",
   components: {
-    organizationSelect,
-    regionSelect
+    // organizationSelect,
+    regionSelect,
+    terminalConfig,
+    protocolConfig
   },
-  props: ["active"],
+  props: {
+    active: {
+      type: String,
+      default: "PING"
+    }
+  },
   data() {
     return {
       searchValue: "",
       checkAllNet: true,
-      checkedNets: ["有线", "无线"],
-      netOptions: netOptions,
       isIndeterminateNet: true,
-      checkAllIsp: true,
-      checkedIsps: ["电信", "移动"],
-      ispOptions: ispOptions,
-      isIndeterminateIsp: true,
       form: {
         filterType: 1,
         filterCondition: this.cityList
       },
       terminal: 1,
-      pingSwitch: false,
-      httpSwitch: false,
-      dnsSwitch: false,
-      pingObj: {
-        timeout: 1, //ping协议配置超时时间
-        count: 10, //ping发送次数
-        packet_size: 55 //ping数据包大小
-      },
-      dnsObj: {
-        is_default: "true",
-        timeout: 10,
-        dns_server: "" //dns自定义ip
-      },
-      httpObj: {
-        protocol: "HTTP1.1",
-        timeout: 600,
-        is_redirect: false,
-        redirect_count: 5,
-        is_snap: false,
-        auth_info: null,
-        header_info: null,
-        body_info: null
-      },
+      protocolSwitch: false,
+
       taskId: "", //任务id
       taskInfo: {
         total: 0,
         success: 0,
         wrong: 0,
         responses: 0
-        //    finished : false
       },
-      finished: "0", //任务结束状态
+      finished: true, //任务结束状态
       timer: null, //定时器
       taskStatus: 1, //当前状态 [1,2,3,4,5,6]//状态集对象
       taskStatusObj: {
         filterWrap: false, //filter外框的显示隐藏
         filterFlag: true, //filter过滤条件的显示隐藏
-        resultLoading: false, //状态栏加载中提示
-        finished: "0"
+        resultLoading: false //状态栏加载中提示
       }, //状态集对象
       protocol_type: "ping",
-      cityList: ["all", "all"], //当前选中的地域列表
-      organizationList: [], //当前选中的组织列表
       checkTerminalAll: false,
       cities: cityOptions,
       isIndeterminate: true,
       terminalDialogVisible: false,
       terminals: [], //终端集合
       checkedTerminals: [], //选中的终端
-      terminalCount: 0,
-      terminalList:[],
+
       checkAllTerminal: false, //终端全选
       httpMethod: "get",
       httpMethodSelect: [
@@ -411,74 +180,32 @@ export default {
           value: "delete",
           label: "delete"
         }
-      ],
-      options: {
-        mode: "text",
-        // modes: ['text', 'code'],
-        mainMenuBar: false,
-        onEditable: function(node) {
-          if (!node.path) {
-            // In modes code and text, node is empty: no path, field, or value
-            // returning false makes the text area read-only
-            return false;
-          }
-        },
-        onError: function(err) {
-          alert(err.toString());
-        },
-        onModeChange: function(newMode, oldMode) {
-          console.log("Mode switched from", oldMode, "to", newMode);
-        }
-      },
-      authEditor: null, //auth
-      headerEditor:null, //header
-      bodyEditor:null  //body
-
+      ]
     };
   },
   created() {
     switch (this.active) {
-      case 0:
+      case "PING":
         this.protocol_type = "ping";
         break;
-      case 1:
+      case "HTTP":
         this.protocol_type = "http";
         break;
-      case 2:
+      case "Traceroute":
         this.protocol_type = "traceroute";
         break;
-      case 3:
+      case "DNS":
         this.protocol_type = "dns";
         break;
     }
   },
-  mounted() {
-    if (this.active == 1) {
-      this.init()
-    }
-  },
+  mounted() {},
   watch: {
     finished: {
       handler: function(newval, oldval) {
         if (newval == true) {
           clearInterval(this.timer);
-          switch (this.taskStatus) {
-            case 1:
-              break;
-            case 2:
-              this.taskStatus = 1;
-              break;
-            case 3:
-              break;
-            case 4:
-              this.taskStatus = 3;
-              break;
-            case 5:
-              break;
-            case 6:
-              this.taskStatus = 5;
-              break;
-          }
+          this.stopTask();
         } else {
           this.timer = setInterval(_ => {
             this.getTaskStatus();
@@ -492,123 +219,54 @@ export default {
           this.taskStatusObj = {
             filterWrap: false,
             filterFlag: true,
-            resultLoading: !this.finished,
-            // disabled:false,
-            finished: this.finished
+            resultLoading: false
           };
+          this.finished = !this.taskStatusObj.resultLoading;
           break;
         case 2:
           this.taskStatusObj = {
             filterWrap: false,
             filterFlag: true,
-            resultLoading: !this.finished,
-            // disabled:false,
-            finished: this.finished
+            resultLoading: true
           };
+          this.finished = !this.taskStatusObj.resultLoading;
           break;
         case 3:
           this.taskStatusObj = {
             filterWrap: true,
             filterFlag: true,
-            resultLoading: false,
-            // disabled:false,
-            finished: "0"
+            resultLoading: false
           };
+          this.finished = !this.taskStatusObj.resultLoading;
           break;
         case 4:
           this.taskStatusObj = {
             filterWrap: true,
             filterFlag: true,
-            resultLoading: !this.finished,
-            // disabled:false,
-            finished: this.finished
+            resultLoading: true
           };
+          this.finished = !this.taskStatusObj.resultLoading;
           break;
         case 5:
           this.taskStatusObj = {
             filterWrap: true,
             filterFlag: false,
-            resultLoading: false,
-            // disabled:false,
-            finished: "0"
+            resultLoading: false
           };
+          this.finished = !this.taskStatusObj.resultLoading;
           break;
         case 6:
           this.taskStatusObj = {
             filterWrap: true,
             filterFlag: false,
-            resultLoading: !this.finished,
-            // disabled:false,
-            finished: this.finished
+            resultLoading: true
           };
+          this.finished = !this.taskStatusObj.resultLoading;
           break;
       }
-    },
-    "form.filterType":function(newval,oldval){
-      if(newval != oldval){
-        this.terminal = 1
-        this.checkedTerminals = []
-        this.checkAllTerminal = false
-      }
-    },
-
-    httpSwitch: function(newval, oldval) {
-      if (newval == true) {
-        this.options = {
-          mode: "code",
-          mainMenuBar: false
-        };
-      } else {
-        this.options = {
-          mode: "text",
-          mainMenuBar: false,
-          onEditable: function(node) {
-            if (!node.path) {
-              // In modes code and text, node is empty: no path, field, or value
-              // returning false makes the text area read-only
-              return false;
-            }
-          }
-          
-        };
-      }
-      let jsonEditorBox = document.getElementById("jsonEditorBox");
-      let containers = jsonEditorBox.getElementsByClassName("jsoneditor");
-      
-      for (let i = 0; i < containers.length; i++) {
-        containers[i].remove();
-      }
-      document
-        .getElementById("headerBox")
-        .getElementsByClassName("jsoneditor")[0]
-        .remove();
-      this.authEditor = null
-      this.headerEditor = null
-      this.bodyEditor = null
-      this.init()
     }
   },
   methods: {
-    handleCheckAllChange(val) {
-      this.checkedNets = val ? netOptions : [];
-      this.isIndeterminateNet = false;
-    },
-    handleCheckedNetChange(value) {
-      let checkedCount = value.length;
-      this.checkAllNet = checkedCount === this.checkedNets.length;
-      this.isIndeterminateNet =
-        checkedCount > 0 && checkedCount < this.netOptions.length;
-    },
-    isphandleCheckAllChange(val) {
-      this.checkedIsps = val ? ispOptions : [];
-      this.isIndeterminateIsp = false;
-    },
-    handleCheckedIspChange(value) {
-      let checkedCount = value.length;
-      this.checkAllIsp = checkedCount === this.checkedIsps.length;
-      this.isIndeterminateIsp =
-        checkedCount > 0 && checkedCount < this.ispOptions.length;
-    },
     //向上箭头
     upHandle() {
       switch (this.taskStatus) {
@@ -671,115 +329,140 @@ export default {
           break;
       }
     },
-    getParentIdHandle(val) {
 
-      this.form.filterCondition = this.organizationList;
-      this.organizationList = val;
-      this.getTerminalCount();
-      this.getTerminalList();
-    },
-    getCityHandle(val) {
-      this.cityList = val;
-      this.getTerminalCount();
-      this.getTerminalList();
-    },
-    createTask() {
-      this.getHttpJson();
-
-      let filter_type,
-        filter_condition,
-        terminal_select,
-        terminals = [];
-      let protocol_configuration = null;
-      let protocol_switch = false;
-      switch (this.active) {
-        case 0:
-          protocol_switch = this.pingSwitch;
-          protocol_configuration = this.pingSwitch ? this.pingObj : null;
-          break;
+    startTask() {
+      switch (this.taskStatus) {
         case 1:
-          protocol_switch = this.httpSwitch;
-          protocol_configuration = this.httpSwitch ? this.httpObj : null;
+          this.taskStatus = 2;
           break;
         case 2:
-          protocol_switch = false;
+          this.taskStatus = 1;
           break;
         case 3:
-          protocol_switch = this.dnsSwitch;
-
-          protocol_configuration = this.dnsSwitch ? this.dnsObj : null;
+          this.taskStatus = 6;
+          break;
+        case 4:
+          break;
+        case 5:
+          this.taskStatus = 6;
+          break;
+        case 6:
           break;
       }
-      //过滤地域组织
-      if (this.form.filterType == 1) {
-        filter_type = "region";
-        filter_condition = this.cityList;
-      } else {
-        filter_type = "organization";
-        filter_condition = this.organizationList;
-      }
-      //过滤终端
-      if (this.terminal == 1) {
-        terminal_select = false;
-        terminals = [];
-      } else {
-        terminal_select = true;
-        terminals = []
-        this.checkedTerminals.forEach((item, index) => {
-          terminals.push(item.value);
-        });
-      }
-
+    },
+    getConfigData(){
+      let terminals = [];
+      this.$refs.terminalConfig.checkedTerminals.forEach((item, index) => {
+        terminals.push(item);
+      });
       let terminal_configuration = {
-        filter_type: filter_type,
-        filter_condition: filter_condition,
+        filter_type: "region",
         network_type: ["all"],
         isp_type: ["all"],
-        terminal_select: terminal_select,
-        terminals: terminals
+        filter_condition: [
+          this.$refs.terminalConfig.province,
+          this.$refs.terminalConfig.city
+        ],
+        group_own:this.$refs.terminalConfig.checked,
+        terminal_select:
+          this.$refs.terminalConfig.terminal === 1 ? false : true,
+        terminals: this.$refs.terminalConfig.terminal === 1 ? null : terminals
       };
       if (!this.taskStatusObj.filterWrap) {
         terminal_configuration = null;
       }
+      let protocol_configuration, auth_info, header_info, body_info;
+      let protocol_type, destination, advanced_switch, protocol_switch;
+      protocol_type = this.protocol_type;
+      destination = this.searchValue;
+      advanced_switch = this.taskStatusObj.filterWrap;
+      protocol_switch = this.protocolSwitch;
+      switch (this.protocol_type) {
+        case "ping":
+          protocol_configuration = this.$refs.protocolConfig.pingObj;
+          break;
+        case "http":
+          auth_info = this.isObjEmpty(
+            this.$refs.protocolConfig.authEditor.get()
+          );
+          header_info = this.isObjEmpty(
+            this.$refs.protocolConfig.headerEditor.get()
+          );
+          body_info = this.isObjEmpty(
+            this.$refs.protocolConfig.bodyEditor.get()
+          );
+          protocol_configuration = {
+            ...this.$refs.protocolConfig.httpObj,
+            auth_info: auth_info,
+            header_info: header_info,
+            body_info: body_info
+          };
+          break;
+        case "dns":
+          protocol_configuration = this.$refs.protocolConfig.dnsObj;
+          break;
+      }
+
+      protocol_configuration = this.protocolSwitch
+        ? protocol_configuration
+        : null;
       let data = {
-        protocol_type: this.protocol_type,
-        destination: this.searchValue,
-        advanced_switch: this.taskStatusObj.filterWrap,
-        terminal_configuration: terminal_configuration,
-        protocol_switch: protocol_switch,
+        protocol_type,
+        destination,
+        advanced_switch,
+        protocol_switch,
+        terminal_configuration,
         protocol_configuration: protocol_configuration
       };
       if (this.protocol_type == "http") {
         data = {
-          protocol_type: this.protocol_type,
-          http_method: this.httpMethod,
-          destination: this.searchValue,
-          advanced_switch: this.taskStatusObj.filterWrap,
-          terminal_configuration: terminal_configuration,
-          protocol_switch: protocol_switch,
-          protocol_configuration: protocol_configuration
+          ...data,
+          http_method: this.httpMethod
         };
       }
+      return data 
+    },
+
+    createTask() {
+      this.startTask();
+      this.taskId = null //清空taskId
+      this.finished = true //reset finished
+      this.taskInfo = {
+        total: 0,
+        success: 0,
+        wrong: 0,
+        responses: 0
+      }
+      this.$emit("getTaskStatusHandle", {
+              finished: this.finished,
+              taskId: this.taskId
+      });
+      let data = this.getConfigData() //get post configiration data
+      
+
       this.$post({
         url: HP1 + "/benchmark/instant/task/v1",
         data: data
       }).then(res => {
         if (res.data.code == 200) {
           this.taskId = res.data.info.task_id;
-          this.$emit("getTaskStatus", {
-            finished: this.finished,
-            taskId: this.taskId
-          });
-          this.getTaskStatus();
+          if (this.taskId && this.taskId != null) {
+            this.$emit("getTaskStatusHandle", {
+              finished: this.finished,
+              taskId: this.taskId
+            });
+          }
         } else {
-          this.$message({
-            type: "error",
-            message: res.data.message
-          });
+          this.stopTask(); //reset taskStatus
+          messageTip("error", this.$t(res.data.message));
         }
       });
     },
+
     getTaskStatus() {
+      if (this.taskId == "" || this.taskId == null) {
+        return;
+      }
       this.$get({
         url: HP1 + "/benchmark/instant/status/v1",
         data: {
@@ -789,36 +472,40 @@ export default {
         if (res.data.code == 200) {
           this.taskInfo = { ...res.data.info };
           this.finished = this.taskInfo.finished;
-          this.$emit("getTaskStatus", {
+
+          this.$emit("getTaskStatusHandle", {
             finished: this.finished,
             taskId: this.taskId
           });
-          switch (this.taskStatus) {
-            case 1:
-              this.taskStatus = 2;
-              break;
-            case 2:
-              break;
-            case 3:
-              this.taskStatus = 6;
-              break;
-            case 4:
-              break;
-            case 5:
-              this.taskStatus = 6;
-              break;
-            case 6:
-              break;
-          }
         } else {
-          this.$message({
-            type: "error",
-            message: res.data.message
-          });
+          messageTip("error", this.$t(res.data.message));
         }
       });
     },
     stopTask() {
+      switch (this.taskStatus) {
+        case 1:
+          break;
+        case 2:
+          this.taskStatus = 1;
+          break;
+        case 3:
+          break;
+        case 4:
+          this.taskStatus = 3;
+          break;
+        case 5:
+          break;
+        case 6:
+          this.taskStatus = 5;
+          break;
+      }
+    },
+    stopTaskHandle() {
+      if(this.taskId == "" || this.taskId == null ){
+        return 
+      }
+
       this.$put({
         url: HP1 + "/benchmark/instant/status/v1",
         data: {
@@ -828,116 +515,22 @@ export default {
         if (res.data.code == 200) {
           this.taskInfo = { ...res.data.info };
           this.finished = res.data.info.finished;
-          this.$emit("getTaskStatus", {
+          this.$emit("getTaskStatusHandle", {
             finished: this.finished,
             taskId: this.taskId
           });
-          switch (this.taskStatus) {
-            case 1:
-              break;
-            case 2:
-              this.taskStatus = 1;
-              break;
-            case 3:
-              break;
-            case 4:
-              this.taskStatus = 3;
-              break;
-            case 5:
-              break;
-            case 6:
-              this.taskStatus = 5;
-              break;
-          }
-        }
-      });
-    },
-    showTerminalDialog() {
-      this.terminalDialogVisible = true;
-    },
-    getTerminalList() {
-      this.$post({
-        url: HP1 + "/terminal/common/terminals/list/v1",
-        data: {
-          type: this.form.filterType == 1 ? "region" : "organization",
-          is_classify: true,
-          filter_condition:
-            this.form.filterType == 1 ? this.cityList : this.organizationList
-        }
-      }).then(res => {
-        if (res.data.code == 200) {
-          this.terminalList = []
-          this.terminals = res.data.info;
-          this.terminals.forEach((item,index)=>{
-            item.terminals.forEach((item1,index1)=>{
-              this.terminalList.push(item1)
-            })
-          })
-        }
-      });
-    },
-    getTerminalCount() {
-      this.$post({
-        url: HP1 + "/terminal/common/terminals/count/v1",
-        data: {
-          type: this.form.filterType == 1 ? "region" : "organization",
-          filter_condition:
-            this.form.filterType == 1
-              ? this.cityList
-              : this.organizationList
-        }
-      }).then(res => {
-        if (res.data.code == 200) {
-          this.terminalCount = res.data.info.alive;
+          this.stopTask(); //change taskStatus
         } else {
-          this.$message({
-            message: res.data.message,
-            type: "error"
-          });
+          messageTip("error", this.$t(res.data.message));
         }
       });
     },
-    terminalhandleCheckAllChange(val) {
-      this.checkedTerminals = val ? this.terminalList : [];
-      this.isIndeterminate = false;
-    },
-    handleCheckedTerminalsChange(value) {
-      let checkedCount = value.length;
-      this.checkAllTerminal = checkedCount === this.terminalCount;
-      this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.terminalCount
-    },
-    confirmHandle() {
-      this.terminalDialogVisible = false;
-    },
-    initEditor(dom, option) {
-      return new JSONEditor(dom, this.options)
-    },
-    getHttpJson() {
-      if(this.authEditor != null){
-        this.httpObj.auth_info = JSON.stringify(this.authEditor.get())
-        this.httpObj.header_info = JSON.stringify(this.headerEditor.get())
-        this.httpObj.body_info = JSON.stringify(this.bodyEditor.get())
-      }
-      
-    },
-    init(){
-      if (this.authEditor == null){
-        let container1 = document.getElementById("authBox");
-        this.authEditor = this.initEditor(container1, this.options);
-      }
-      if(this.headerEditor == null){
-        let container2 = document.getElementById("headerBox");
-        this.headerEditor = this.initEditor(container2, this.options);
-      }
-      if(this.bodyEditor == null){
-        let container3 = document.getElementById("bodyBox");
-        this.bodyEditor = this.initEditor(container3, this.options);
-      }
+    isObjEmpty(obj) {
+      return JSON.stringify(obj);
     }
   },
-  destroyed(){
-    clearInterval(this.timer)
+  destroyed() {
+    clearInterval(this.timer);
   }
 };
 </script>
@@ -951,15 +544,6 @@ export default {
 #searchBox .el-select {
   width: 120px;
 }
-#filterBox .el-select {
-  margin-top: 0;
-}
-#filterBox .el-checkbox-group {
-  display: inline-block;
-}
-#filterBox .el-switch {
-  margin-top: 3px;
-}
 #terminalDialog .el-checkbox__label {
   width: 150px;
   text-overflow: ellipsis;
@@ -967,26 +551,13 @@ export default {
   overflow: hidden;
   vertical-align: middle;
 }
-#filterBox .el-switch {
-  float: right;
-}
 #stop .el-button {
   background: #f44336;
   color: #fff;
   border: none;
 }
-#terminalDialog .el-checkbox {
-  min-width: 150px;
-  margin-right: 5px;
-}
-#terminalDialog .el-checkbox + .el-checkbox {
-  margin-left: 0;
-}
 #searchBox .searchInput {
   width: calc(100% - 350px);
-}
-.agreementContent .el-input {
-  width: 120px;
 }
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

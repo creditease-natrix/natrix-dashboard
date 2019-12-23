@@ -47,10 +47,20 @@
 .el-button--default {
     color: #fff;
     background-color: #3a3afb61;
-    /* border-color: #3a3afb61; */
 }
 
 .el-button--default:hover {
     opacity: 0.8;
 }
 
+.el-breadcrumb__inner.is-link {
+    color: none;
+}
+
+.el-submenu.is-disabled .el-menu-item, .el-submenu.is-disabled .el-submenu__title {
+    opacity: 1;
+}
+
+.submitBox {
+    text-align: right;
+}

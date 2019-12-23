@@ -1,6 +1,8 @@
 <template>
     <div class="pageBox">
+            <p class="fl totalNum">共<span>{{item_count}}</span>条记录</p>
             <el-pagination
+                class="fr"
                 background
                 layout="prev, pager, next"
                 :current-page.sync="currentPage"
@@ -25,6 +27,10 @@ export default {
         currentPageNum:{
             type:Number,
             default:1
+        },
+        item_count:{
+            type:Number,
+            default:0
         }
     },
     
@@ -67,6 +73,9 @@ export default {
 <style scoped>
 .pageBox{
     margin:20px 0;
-    text-align: right;
+}
+.totalNum{
+    font-size:14px;
+    line-height: 30px;
 }
 </style>

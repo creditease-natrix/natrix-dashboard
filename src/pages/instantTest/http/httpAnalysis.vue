@@ -8,7 +8,7 @@
             </el-breadcrumb>
         </div>
        <instantNav :active="1"></instantNav>
-       <searchBox :active="1" v-on:getTaskStatus="getTaskInfo"></searchBox>
+       <searchBox :active="'HTTP'" v-on:getTaskStatusHandle="getTaskInfo"></searchBox>
        <div class="pingContent">
             <div class="pingNavBox">
                 <ul class="pingNav clear">
@@ -258,7 +258,7 @@ import errorinfoTable from "../components/errorinfoTable.vue"
 import natrixMapChart from "../../../components/natrixMapChart.vue"
 import natrixLineChart from "../../../components/natrixLineChart.vue"
 import natrixPieChart from "../../../components/natrixPieChart.vue"
-import {intercept } from "../../../until/index.js"
+import {intercept ,messageTip} from "../../../until/index.js"
 
 
 export default {
@@ -320,10 +320,10 @@ export default {
             },
             parseTimeRange: {
                 data_map: [
-                    {min: 1000, level: "critical"},
-                    {min: 500, max: 1000, level: "warning"},
-                    {min: 200, max: 500, level: "fine"},
-                    {max: 200, level: "excellent"}
+                    {min: 10000, level: "critical"},
+                    {min: 5000, max: 10000, level: "warning"},
+                    {min: 2000, max: 5000, level: "fine"},
+                    {max: 2000, level: "excellent"}
                 ],
                 precision: 2
             },
@@ -379,6 +379,7 @@ export default {
                     },5*1000)
                 
                 }else{
+                    this.refreshAnalyseContent()
                     clearInterval(this.timer)
                 }
             }
@@ -578,10 +579,7 @@ export default {
                     }
                 
                 }else{
-                    this.$message({
-                        type:'error',
-                        message:res.data.message
-                    })
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -601,10 +599,7 @@ export default {
                    
                 
                 }else{
-                    this.$message({
-                        type:'error',
-                        message:res.data.message
-                    })
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -623,10 +618,7 @@ export default {
                     
                 
                 }else{
-                    this.$message({
-                        type:'error',
-                        message:res.data.message
-                    })
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
 
@@ -646,10 +638,7 @@ export default {
                     
                 
                 }else{
-                    this.$message({
-                        type:'error',
-                        message:res.data.message
-                    })
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
 
@@ -676,15 +665,10 @@ export default {
                         item.period_transfer = intercept(item.period_transfer,this.precision)
                     })
                     this.tableData1 = res.data.info.wrong
-                    this.tableData1.forEach((item,index)=>{
-                        // item.name = item.organizations.join(" ")
-                    })
+                    
                     this.errorData = res.data.info.error
                 }else{
-                    this.$message({
-                        type:'error',
-                        message:res.data.message
-                    })
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         }

@@ -1,4 +1,4 @@
-
+import rootvue from "../main.js";
 export const  isUrl = (str_url) =>{
     var notRegex = '(localhost'
         + '|'
@@ -244,3 +244,10 @@ export function deepClone(obj) {
     }
     return objClone;
 }  
+
+export function messageTip(type,message){
+    rootvue.$message({
+      type: type,
+      message: message
+    });
+}

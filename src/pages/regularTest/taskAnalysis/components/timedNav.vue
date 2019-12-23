@@ -41,7 +41,6 @@ export default {
     methods: {
         tabClick(index) {
             this.active = index;
-            console.log(this.active,"timednav")
             this.$emit("handle",index)
         },
        

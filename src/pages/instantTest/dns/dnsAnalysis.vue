@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <instantNav :active="3"></instantNav>
-    <searchBox :active="3" v-on:getTaskStatus="updateTaskInfo"></searchBox>
+    <searchBox :active="'DNS'" v-on:getTaskStatusHandle="updateTaskInfo"></searchBox>
     <div class="pingContent">
       <div class="pingNavBox">
         <ul class="pingNav clear">
@@ -163,7 +163,7 @@ import natrixPieChart from "../../../components/natrixPieChart.vue"
 import natrixLineChart from "../../../components/natrixLineChart.vue"
 import natrixMapChart from "../../../components/natrixMapChart.vue"
 import natrixBarChart from "../../../components/natrixBarChart.vue"
-import {intercept} from "../../../until/index.js"
+import {intercept,messageTip} from "../../../until/index.js"
 export default {
   name: "",
   components: {
@@ -284,6 +284,7 @@ export default {
       handler: function(newval, oldval) {
         if (this.finished){
           if (this.timer){
+            this.refreshAnalyseContent()
             clearInterval(this.timer)
           }
         }else{
@@ -360,10 +361,7 @@ export default {
             let data = res.data.info
             this.parseTimeRegionAnalyse.values = data.values
           }else{
-            this.$message({
-              type:'error',
-              message:res.data.message
-            })
+            messageTip("error",this.$t(res.data.message))
           }
         })
       },
@@ -381,10 +379,7 @@ export default {
             // natrixPieChart
             this.parseResultRegionDistribution.values = data.values
           }else{
-            this.$message({
-              type:'error',
-              message:res.data.message
-            })
+            messageTip("error",this.$t(res.data.message))
           }
         })
       },
@@ -403,10 +398,7 @@ export default {
             this.parseTimeRegionTop10['x-axis'] = data['x-axis']
 
           }else{
-            this.$message({
-              type:'error',
-              message:res.data.message
-            })
+            messageTip("error",this.$t(res.data.message))
           }
         })
       },
@@ -424,10 +416,7 @@ export default {
             this.parseTimeOrganizationAnalyse.viewpoints = data.viewpoints
             this.parseTimeOrganizationAnalyse["x-axis"] = data["x-axis"]
           }else{
-            this.$message({
-              type:'error',
-              message:res.data.message
-            })
+            messageTip("error",this.$t(res.data.message))
           }
         })
       },
@@ -445,10 +434,7 @@ export default {
             this.parseTimeOrganizationDistribution.viewpoints = data.viewpoints
             this.parseTimeOrganizationDistribution["x-axis"] = data["x-axis"]
           }else{
-            this.$message({
-              type:'error',
-              message:res.data.message
-            })
+            messageTip("error",this.$t(res.data.message))
           }
         })
       },
@@ -467,10 +453,7 @@ export default {
             this.parseTimeOrganizationTop10.viewpoints = data.viewpoints
             this.parseTimeOrganizationTop10['x-axis'] = data['x-axis']
           }else{
-            this.$message({
-              type:'error',
-              message:res.data.message
-            })
+            messageTip("error",this.$t(res.data.message))
           }
         })
       },
@@ -492,10 +475,7 @@ export default {
             })
             this.generateTableData(successData)
           }else{
-            this.$message({
-              type:'error',
-              message:res.data.message
-            })
+            messageTip("error",this.$t(res.data.message))
           }
         })
       },

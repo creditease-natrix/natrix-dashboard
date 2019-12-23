@@ -1,14 +1,18 @@
 <template>
   <div id="app" class="sidebar-mini wrapper">
-    <Header v-if="!showMenu1"></Header>
+    <Header 
+    v-if="!showMenu1" 
+    v-on:onCollapse="collapseHandle" 
+    :collapseValue="collapseValue">
+    </Header>
     <div id="box" class="clear" v-if="!showMenu1">
-      <Menu></Menu>
-      <div id="content">
+      <Menu v-on:onCollapse="collapseHandle" :collapseValue="collapseValue"></Menu>
+      <div id="content" v-on:onCollapse="collapseHandle" :class="{collapsed:collapseValue}">
         <div id="tablebox">
-          <router-view :status="isLogin"></router-view>
+          <router-view :status="isLogin" ref="child"></router-view>
         </div>
       </div>
-      <Footer></Footer>
+      <Footer v-on:onCollapse="collapseHandle" :collapseValue="collapseValue"></Footer>
     </div>
     <router-view v-if="showMenu1"></router-view>
   </div>
@@ -19,14 +23,12 @@ import getGlobalConfig from "./config";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Menu from "./components/menu";
-import Nav from "./components/nav";
 export default {
   name: "App",
   components: {
     Footer,
     Header,
     Menu,
-    Nav
   },
   beforeCreate() {
     getGlobalConfig();
@@ -35,7 +37,9 @@ export default {
     return {
       navPath: ["/login","/register"],
       isShowMenu: "",
-      isLogin: ""
+      isLogin: "",
+      collapseValue:false,
+      changeValue:false //是否切换成功
     };
   },
   created() {
@@ -46,7 +50,11 @@ export default {
       return this.navPath.some(item => item == this.$route.path);
     }
   },
-  methods: {}
+  methods: {
+    collapseHandle(value){
+      this.collapseValue = value
+    }
+  }
 };
 </script>
 
@@ -120,5 +128,7 @@ body {
   float: right;
   /* margin-left:750px; */
 }
-/*ui框架样式统一*/
+#content.collapsed{
+  padding-left:60px;
+}
 </style>

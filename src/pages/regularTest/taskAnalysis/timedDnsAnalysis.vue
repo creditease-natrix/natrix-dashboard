@@ -4,9 +4,7 @@
             <el-collapse v-model="areaNames">
                 <el-collapse-item title="DNS解析时间（地域分析）" name="1">
                     <natrixMapChart 
-                    v-loading="parsetimeAreaLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :mapChartLoading="parsetimeAreaLoading"
                     ref="map"
                     :chart_data="dns_parsetime_area"
                     :chart_style="this.packetLossRange">
@@ -14,9 +12,7 @@
                 </el-collapse-item>
                 <el-collapse-item title="解析地址地域分布（地域分析）" name="2">
                     <natrixPieChart 
-                    v-loading="areadataLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :pieChartLoading="areadataLoading"
                     :chart_data="dns_areadata">
                     </natrixPieChart>
                 </el-collapse-item>
@@ -26,16 +22,12 @@
             <el-collapse v-model="timeNames">
                 <el-collapse-item title="DNS解析（时间分析）" name="1">
                     <natrixLineChart 
-                    v-loading="parsetimeLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :lineChartLoading="parsetimeLoading"
                     :chart_data="dns_parsetime_time"></natrixLineChart>
                 </el-collapse-item>
                 <el-collapse-item title="DNS异常（时间分析）" name="2">
                     <natrixLineChart
-                    v-loading="errortimeLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading" 
+                    :lineChartLoading="errortimeLoading"
                     :chart_data="dns_errortime"></natrixLineChart>
                 </el-collapse-item>
             </el-collapse>
@@ -48,7 +40,7 @@
 import natrixMapChart from "../../../components/natrixMapChart.vue"
 import natrixLineChart from "../../../components/natrixLineChart.vue"
 import natrixPieChart from "../../../components/natrixPieChart.vue"
-import {timeStamp1} from "../../../until/index.js"
+import {timeStamp1,messageTip} from "../../../until/index.js"
 export default {
     name:'timedDnsAnalysis',
     props:{
@@ -81,10 +73,10 @@ export default {
             },
             packetLossRange: {
                 data_map: [
-                    {min: 10, level: "critical"},
-                    {min: 0.5, max: 10, level: "warning"},
-                    {min: 0, max: 0.5, level: "fine"},
-                    {max: 0, level: "excellent"}
+                    {min: 1000, level: "critical"},
+                    {min:500, max: 1000, level: "warning"},
+                    {min: 200, max: 500, level: "fine"},
+                    {max: 200, level: "excellent"}
                 ],
                 precision: 2
             },
@@ -122,7 +114,8 @@ export default {
                         name: ""
                     }
                 ],
-                "x-axis": []
+                "x-axis": [],
+                precision:0
             },
             taskInfo:{}
             
@@ -155,6 +148,8 @@ export default {
                 if(res.data.code == 200){
                     this.parsetimeAreaLoading = false
                     this.dns_parsetime_area.values = res.data.info.values
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -169,6 +164,8 @@ export default {
                 if(res.data.code == 200){
                     this.areadataLoading = false
                     this.dns_areadata.values = res.data.info.values
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -193,6 +190,8 @@ export default {
                     this.dns_parsetime_time = Object.assign(
                         this.dns_parsetime_time,data
                     )
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -217,6 +216,8 @@ export default {
                     this.dns_errortime = Object.assign(
                         this.dns_errortime,data
                     )
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         }

@@ -106,7 +106,7 @@ export default {
             let nodes = root.descendants()
             // calculate the height of tree chart.
             let leaves_count = root.leaves().length
-            this.height = this.node_height * leaves_count
+            this.height = this.node_height * leaves_count + 50 
 
             // calculate the width of tree chart
             let lowest_leave = nodes.reduce(function(pre, curr){

@@ -1,7 +1,12 @@
 //natrix Pie Chart: 
 
 <template>
-    <div class="natrix-chart-container"  ref="chart_container">
+    <div 
+    class="natrix-chart-container"  
+    v-loading="barChartLoading"
+    element-loading-text="加载中"
+    element-loading-spinner="el-icon-loading"
+    ref="chart_container">
         <div class="areaBox" ref="chart_body">
         </div>
     </div>
@@ -51,7 +56,8 @@ export default {
         chart_style: {
             type: Object,
             required: false
-        }
+        },
+        barChartLoading:false
     },
     data () {
         return {
@@ -79,23 +85,22 @@ export default {
          */
         drawChart(chart_data){
             let name = [] , seriesData = [], xAxisData = chart_data['x-axis']
+            let precision = chart_data.precision == undefined ? chart_data.precision :  2
             function precisionHandle(value){
-                return value.toFixed(2)
+                return value.toFixed(precision)
 
             }
             chart_data.viewpoints.forEach((item,index)=>{
                 let values = item.values.map(precisionHandle)
-                name.push(this.$t(item.name))
+                name.push(this.$t(String(item.name)))
                 seriesData.push({
-                    name:this.$t(item.name),
+                    name:this.$t(String(item.name)),
                     type:'bar',
                     barWidth : chart_data.barWidth ? chart_data.barWidth : 50 ,
                     data:values
                 })
             })
-            
             let dom = this.$refs.chart_body
-            
             let myChart = this.$echarts.init(dom, "macarons");
             let option = {
                 title: {

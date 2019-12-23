@@ -4,7 +4,7 @@
             <span class="title">云拨测——任务分析</span>
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <a :href="href" class="home">云拨测<i class="el-breadcrumb__separator el-icon-arrow-right"></i></a>
-                <el-breadcrumb-item>定时测</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{path:''}">定时测</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{ path: '/timedAnalysis' }">任务分析</el-breadcrumb-item>
             </el-breadcrumb>
         </div>

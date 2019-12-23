@@ -14,10 +14,6 @@ import workInfoManage from  '../pages/systemManage/organization/workInfoManage.v
 const  addWorkInfo = () => import('../pages/systemManage/organization/addWorkInfo.vue')
 const  editWorkInfo = () => import ('../pages/systemManage/organization/editWorkInfo.vue')
 const  workDetail = () => import ('../pages/systemManage/organization/workDetail.vue')
-const  monitorDeviceDetail = () => import ('../pages/systemManage/organization/monitorDeviceDetail.vue')
-const  monitorSiteDetail = () => import ('../pages/systemManage/organization/monitorSiteDetail.vue')
-const  broadBandDetail = () => import ('../pages/systemManage/organization/broadBandDetail.vue')
-
 //即时测
 import pingAnalysis from '../pages/instantTest/ping/pingAnalysis.vue' // ping
 import httpAnalysis from '../pages/instantTest/http/httpAnalysis.vue' // http
@@ -31,6 +27,19 @@ import editTask from "../pages/regularTest/taskManage/editTask.vue"
 import taskInfo from "../pages/regularTest/taskManage/taskInfo.vue"
 //任务分析
 import timedAnalysis from "../pages/regularTest/taskAnalysis/timedAnalysis.vue";
+//告警中心
+import alarmList from "../pages/alarmCenter/alarmList/alarmList.vue"
+import addAlarm from "../pages/alarmCenter/alarmList/addAlarm.vue"
+import editAlarm from "../pages/alarmCenter/alarmList/editAlarm.vue"
+import alarmInfo from "../pages/alarmCenter/alarmList/alarmInfo.vue"
+import noticeList from "../pages/alarmCenter/alarmList/noticeList.vue"
+
+//许可证管理
+import licenseList from "../pages/licenseManage/licenseList.vue"
+
+//组管理
+import groupList from "../pages/groupManage/groupList.vue"
+import userInfo from "../pages/groupManage/userInfo.vue"
 
 let routes = [
   { path: "/login", name: "login", component: login },
@@ -98,25 +107,6 @@ let routes = [
     component: editWorkInfo,
     meta: { requireAuth: true }
   }, //编辑职场信息
-  {
-    path: "/monitorDeviceDetail",
-    name: "monitorDeviceDetail",
-    component: monitorDeviceDetail,
-    meta: { requireAuth: true }
-  }, //监测设备信息
-  {
-    path: "/monitorSiteDetail",
-    name: "monitorSiteDetail",
-    component: monitorSiteDetail,
-    meta: { requireAuth: true }
-  }, //监测点信息
-  {
-    path: "/broadBandDetail",
-    name: "broadBandDetail",
-    component: broadBandDetail,
-    meta: { requireAuth: true }
-  }, //宽带信息
-
   //即时测
   { path: "/pingAnalysis", name: "pingAnalysis", component: pingAnalysis }, //ping
   {
@@ -169,6 +159,54 @@ let routes = [
     path: "/timedAnalysis",
     name: "timedAnalysis",
     component: timedAnalysis,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/alarmList",
+    name: "alarmList",
+    component: alarmList,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/addAlarm",
+    name: "addAlarm",
+    component: addAlarm,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/editAlarm",
+    name: "editAlarm",
+    component: editAlarm,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/alarmInfo",
+    name: "alarmInfo",
+    component: alarmInfo,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/noticeList",
+    name: "noticeList",
+    component: noticeList,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/licenseList",
+    name: "licenseList",
+    component: licenseList,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/groupList",
+    name: "groupList",
+    component: groupList,
+    meta: { requireAuth: true }
+  },
+  {
+    path: "/userInfo",
+    name: "userInfo",
+    component: userInfo,
     meta: { requireAuth: true }
   }
 ];

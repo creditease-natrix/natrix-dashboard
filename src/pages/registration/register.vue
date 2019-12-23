@@ -17,6 +17,9 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
+                    <p class="rule">格式：6~16位 包含大小写字母数字和下划线</p>
+                </div>
+                <div class="form-group has-feedback">
                     <input name="password" v-model="confirmPw" type="password" class="form-control" placeholder="确认密码">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
@@ -97,10 +100,7 @@ export default {
                         window.location.href=NatrixIndex
                     },1000)
                 }else{
-                    this.$message({
-                        type:"error",
-                        message:res.data.message
-                    })
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         }
@@ -129,5 +129,10 @@ body,html{
 }
 .row .el-button{
     margin-right:15px;
+}
+.rule{
+    font-size:12px;
+    line-height:16px;
+    color:#F56C6C;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <footer class="main-footer">
+    <footer class="main-footer" :class="{collapsed:collapseValue}">
             <div class="pull-right hidden-xs">
                 <b>Version</b> 0.1.0
             </div>
@@ -10,6 +10,12 @@
 <script>
 export default {
   name: 'Footer',
+  props:{
+    collapseValue:{
+      type:Boolean,
+      default:false
+    }
+  },
   data () {
     return {
       
@@ -31,5 +37,8 @@ export default {
 }
 .right{
   font-weight:bold;
+}
+.main-footer.collapsed{
+  padding-left:60px;
 }
 </style>

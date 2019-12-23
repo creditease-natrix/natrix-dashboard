@@ -5,9 +5,7 @@
             <el-collapse v-model="areaActiveNames">
                 <el-collapse-item title="HTTP时延（地域分析）" name="1">
                     <natrixMapChart 
-                    v-loading="packetLossLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :mapChartLoading="packetLossLoading"
                     ref="map"
                     :chart_data="http_packetLoss"
                     :chart_style="this.packetLossRange">
@@ -15,12 +13,10 @@
                 </el-collapse-item>
                 <el-collapse-item title="HTTP解析时间（地域分析）" name="2">
                     <natrixMapChart 
-                    v-loading="parseTimeLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :mapChartLoading="parseTimeLoading"
                     ref="map"
                     :chart_data="http_parseTime"
-                    :chart_style="this.packetLossRange"
+                    :chart_style="this.parseTimeRange"
                     >
                     </natrixMapChart>
                 </el-collapse-item>
@@ -30,35 +26,26 @@
             <el-collapse v-model="areaTimeNames">
                 <el-collapse-item title="HTTP时延（时间分析）" name="1">
                     <natrixLineChart 
-                    v-loading="delayLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :lineChartLoading="delayLoading"
                     :chart_data="http_delay"></natrixLineChart>
                 </el-collapse-item>
                 <el-collapse-item title="HTTP异常（时间分析）" name="2">
                     <natrixLineChart 
-                    v-loading="errorLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :lineChartLoading="errorLoading"
                     :chart_data="httpError_time"></natrixLineChart>
                 </el-collapse-item>
-                
             </el-collapse>
         </div>
         <div v-if="active == 2">
             <el-collapse v-model="areaDefaultNames">
                 <el-collapse-item title="HTTP请求结果分布（综合分析）" name="1">
                     <natrixPieChart 
-                    v-loading="requestLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :pieChartLoading="requestLoading"
                     :chart_data="http_request"></natrixPieChart>
                 </el-collapse-item>
                 <el-collapse-item title="HTTP请求阶段分析（综合分析）" name="2">
                     <natrixPieChart 
-                    v-loading="stageLoading"
-                    element-loading-text="加载中"
-                    element-loading-spinner="el-icon-loading"
+                    :pieChartLoading="stageLoading"
                     :chart_data="http_stage"></natrixPieChart>
                 </el-collapse-item>
             </el-collapse>
@@ -71,7 +58,7 @@
 import natrixMapChart from "../../../components/natrixMapChart.vue"
 import natrixLineChart from "../../../components/natrixLineChart.vue"
 import natrixPieChart from "../../../components/natrixPieChart.vue"
-import {timeStamp1} from "../../../until/index.js"
+import {timeStamp1,messageTip} from "../../../until/index.js"
 export default {
     name:'timedHttpAnalysis',
     props:{
@@ -100,10 +87,19 @@ export default {
             stageLoading:true,
             packetLossRange: {
                 data_map: [
-                    {min: 10, level: "critical"},
-                    {min: 0.5, max: 10, level: "warning"},
-                    {min: 0, max: 0.5, level: "fine"},
-                    {max: 0, level: "excellent"}
+                    {min: 10000, level: "critical"},
+                    {min: 5000, max: 10000, level: "warning"},
+                    {min: 2000, max: 5000, level: "fine"},
+                    {max: 2000, level: "excellent"}
+                ],
+                precision: 2
+            },
+            parseTimeRange:{
+                data_map: [
+                    {min: 1000, level: "critical"},
+                    {min: 500, max: 1000, level: "warning"},
+                    {min: 200, max: 500, level: "fine"},
+                    {max: 200, level: "excellent"}
                 ],
                 precision: 2
             },
@@ -150,13 +146,15 @@ export default {
                         name: ""
                     }
                 ],
-                "x-axis": []
+                "x-axis": [],
+                precision:0
             },
             http_request:{
                 title: {
                     text: "HTTP请求结果分布",
                 },
-                values: []
+                values: [],
+                precision:0
             },
             http_stage:{
                 title: {
@@ -171,10 +169,7 @@ export default {
        
     },
     watch:{
-        // active:function(newval,oldval){
-        //     this.updateInfo(this.taskObj)
-
-        // }
+        
     },
     mounted(){
     },
@@ -214,10 +209,7 @@ export default {
                     this.packetLossLoading = false
                     this.http_packetLoss.values = res.data.info.values
                 }else{
-                    this.$message({
-                        type:"error",
-                        message:res.data.message
-                    })
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -232,6 +224,8 @@ export default {
                 if(res.data.code == 200){
                     this.parseTimeLoading = false
                     this.http_parseTime.values = res.data.info.values
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -256,6 +250,8 @@ export default {
                     this.http_delay = Object.assign(
                         this.http_delay,data
                     )
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -280,6 +276,8 @@ export default {
                     this.httpError_time = Object.assign(
                         this.httpError_time,data
                     )
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -295,6 +293,8 @@ export default {
                     this.requestLoading = false
                     let data = res.data.info
                     this.http_request.values = data.values
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         },
@@ -309,6 +309,8 @@ export default {
                 if(res.data.code == 200){
                    this.stageLoading = false
                    this.http_stage.values = res.data.info.values
+                }else{
+                    messageTip("error",this.$t(res.data.message))
                 }
             })
         }

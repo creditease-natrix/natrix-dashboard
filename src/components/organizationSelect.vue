@@ -25,6 +25,7 @@
 }
 </style>
 <script>
+import {messageTip} from "../until/index.js"
 export default {
   name: "organizationSelect",
   data() {
@@ -119,6 +120,9 @@ export default {
             } else {
               that.selectParentId = that.rootParentId;
             }
+            that.emitResponse()
+          }else{
+            messageTip("error",this.$t(res.data.message))
             that.emitResponse()
           }
         });

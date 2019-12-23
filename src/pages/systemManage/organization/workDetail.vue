@@ -9,7 +9,7 @@
             </el-breadcrumb>
         </div>
         <div class="tableCaption">
-            <h4 class="tableTitle">组织与地域信息</h4>
+            <h4 class="tableTitle">组织配置信息</h4>
             <el-table
                 :data="regionData"
                 border
@@ -34,6 +34,33 @@
                 <el-table-column
                 prop="comment"
                 width="220"
+                label="备注">
+                </el-table-column>
+                
+            </el-table>
+            
+        </div>
+        <div class="tableCaption">
+            <h4 class="tableTitle">下级组织信息</h4>
+            <el-table
+                :data="childrenData"
+                border
+                style="width: 100%,margin-top:30px;">
+                <el-table-column
+                prop="name"
+                label="下级组织名称"
+                >
+                </el-table-column>
+                <el-table-column
+                prop="level"
+                label="组织级别"
+                >
+                </el-table-column>
+                
+                
+                <el-table-column
+                prop="comment"
+                width="120"
                 label="备注">
                 </el-table-column>
                 
@@ -72,62 +99,6 @@
             </el-table>
         </div>
         <div class="tableCaption">
-            <h4 class="tableTitle">下级组织信息</h4>
-            <el-table
-                :data="childrenData"
-                border
-                style="width: 100%,margin-top:30px;">
-                <el-table-column
-                prop="name"
-                label="下级组织名称"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="level"
-                label="组织级别"
-                >
-                </el-table-column>
-                
-                
-                <el-table-column
-                prop="comment"
-                width="120"
-                label="备注">
-                </el-table-column>
-                
-            </el-table>
-            
-        </div>
-        <div class="tableCaption">
-            <h4 class="tableTitle">组织网络信息</h4>
-            <el-table
-                :data="networkData"
-                border
-                style="width: 100%,margin-top:30px;">
-                
-                <el-table-column
-                prop="segment"
-                label="网段"
-                width="200">
-                </el-table-column>
-                <el-table-column
-                prop="gateway"
-                label="网关"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="segment_type_verbosename"
-                label="网络类型"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="comment"
-                label="备注"
-                >
-                </el-table-column>
-            </el-table>
-        </div>
-        <div class="tableCaption">
             <h4 class="tableTitle">组织联系人信息</h4>
             <el-table
                 :data="contactData"
@@ -157,82 +128,6 @@
                 prop="identity_verbosename"
                 width="100"
                 label="职能">
-                </el-table-column>
-                
-            </el-table>
-        </div>
-        
-        <div class="tableCaption">
-            <h4 class="tableTitle">组织宽带信息</h4>
-            <el-table
-                :data="broadBandData"
-                border
-                style="width: 100%,margin-top:30px;">
-                <el-table-column
-                label="宽带名称"
-               >
-                    <template slot-scope="scope">
-                        <span  class="broadBandName" @click="getBroadBandInfo(scope.row.id)">{{ scope.row.name }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                prop="operator_verbosename"
-                label="运营商"
-                width="200">
-                </el-table-column>
-                <el-table-column
-                prop="speed"
-                label="宽带速度"
-                >
-                </el-table-column>
-                <!-- <el-table-column
-                prop="start_time"
-                label="租期开始"
-                >
-                </el-table-column> -->
-                <el-table-column
-                prop="end_time"
-                label="租期结束"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="staff_contact"
-                label="公司宽带负责人"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="isp_contact"
-                label="运营商负责人"
-                >
-                </el-table-column>
-                
-            </el-table>
-        </div>
-        <div class="tableCaption">
-            <h4 class="tableTitle">组织网络出口信息</h4>
-            <el-table
-                :data="exportData"
-                border
-                style="width: 100%,margin-top:30px;">
-                <el-table-column
-                prop="type_verbosename"
-                label="出口类型"
-               >
-                </el-table-column>
-                <el-table-column
-                prop="device_verbosename"
-                label="出口设备"
-                width="200">
-                </el-table-column>
-                <el-table-column
-                prop="ip"
-                label="出口IP"
-                >
-                </el-table-column>
-                <el-table-column
-                prop="comment"
-                label="备注"
-                >
                 </el-table-column>
                 
             </el-table>
@@ -532,10 +427,6 @@ export default {
                 }
             })
         },
-        getInfo(scope,row){
-            console.log(scope)
-
-        },
         getDeviceSite(id){
             this.dialogVisibleSite = true
             this.$get({
@@ -550,20 +441,7 @@ export default {
             })
         },
         getDevice(id){
-            // this.dialogVisibleDevice = true
-            // this.$get({
-            //     url:HP1+"/terminal/organization/device/v1",
-            //     data:{
-            //         id:id
-            //     }
-            // }).then(res=>{
-            //     if(res.data.code  == 200){
-            //         this.deviceForm = res.data.info
-            //         this.deviceForm.first_online_time = new Date(this.deviceForm.first_online_time).toMyStr()
-            //         this.deviceForm.last_online_time = new Date(this.deviceForm.last_online_time).toMyStr()
-            //     }
-
-            // })
+            
             this.$router.push({
                 path:'terminalDetail',
                 query:{

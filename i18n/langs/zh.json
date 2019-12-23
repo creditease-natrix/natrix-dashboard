@@ -19,7 +19,8 @@
   "ping delay org analyse": "PING延时（组织分析）",
   "ping delay distribution org analyse": "PING延时时间段分布",
   "ping delay top org analyse": "PING延时TOP（组织分析）",
-
+  "on": "开启",
+  "off": "关闭",
   "total_time": "总时间",
   "namelookup_time": "解析时间",
   "tcp_connect_time": "TCP连接时间",
@@ -41,6 +42,15 @@
   "dns parse_time org analyse": "DNS解析时间（组织分析）",
   "dns parse_time distribution org analyse": "DNS解析时间分布（组织分析）",
   "dns parse_time top org analyse": "DNS解析时间TOP(组织分析)",
+
+  "error_count": "错误数量",
+  "ping_loss_rate": "PING 丢包率",
+  "ping_delay": "PING 延时",
+  "http_request_time": "HTTP 请求时间",
+  "http_status_code": "HTTP 状态码",
+  "average": "均值",
+  "individuality": "任意个体",
+
   "active": "激活态",
   "maintain": "维护态",
   "posting": "邮寄态",
@@ -49,5 +59,13 @@
   "4G": "4G",
   "other": "其他",
   "basic": "基本",
-  "advance": "高级"
+  "advance": "高级",
+  "shared": "共享",
+  "unbinding": "未绑定",
+  "binding": "已绑定",
+
+  "admin_role": "管理员角色",
+  "task_role": "任务角色",
+  "alert_role": "告警角色",
+  "read_role": "只读角色"
 }

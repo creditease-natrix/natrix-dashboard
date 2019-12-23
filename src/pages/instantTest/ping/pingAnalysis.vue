@@ -8,7 +8,9 @@
       </el-breadcrumb>
     </div>
     <instantNav :active="0"></instantNav>
-    <searchBox :active="0" ref="searchBox" v-on:getTaskStatus="updateTaskInfo"></searchBox>
+    <searchBox :active="'PING'" 
+    ref="searchBox" 
+    v-on:getTaskStatusHandle="updateTaskInfo"></searchBox>
     <div class="pingContent">
       <div class="pingNavBox">
         <ul class="pingNav clear">
@@ -110,7 +112,7 @@ import errorinfoTable from "../components/errorinfoTable.vue";
 import natrixLineChart from "../../../components/natrixLineChart.vue";
 import natrixBarChart from "../../../components/natrixBarChart.vue";
 import natrixMapChart from "../../../components/natrixMapChart.vue";
-import {intercept} from "../../../until/index.js"
+import {intercept,messageTip} from "../../../until/index.js"
 export default {
   name: "",
   components: {
@@ -151,7 +153,6 @@ export default {
       height: 0,
       tableData: [],
       tableData1: [],
-      // taskId: "bb6c60f9-d04f-49dc-b1f1-703761c1fb07",
       taskId: null,
       finished: true, //状态
 
@@ -253,6 +254,7 @@ export default {
       handler: function(newval, oldval) {
          if (this.finished){
           if (this.timer){
+            this.refreshAnalyseContent()
             clearInterval(this.timer)
           }
         }else{
@@ -354,10 +356,7 @@ export default {
             );
           }
         } else {
-          this.$message({
-            type: "error",
-            message: res.data.message
-          });
+          messageTip("error",this.$t(res.data.message))
         }
       });
     },
@@ -382,10 +381,7 @@ export default {
             );
           }
         } else {
-          this.$message({
-            type: "error",
-            message: res.data.message
-          });
+          messageTip("error",this.$t(res.data.message))
         }
       });
     },
@@ -406,10 +402,7 @@ export default {
             data
           );
         } else {
-          this.$message({
-            type: "error",
-            message: res.data.message
-          });
+          messageTip("error",this.$t(res.data.message))
         }
       });
     },
@@ -431,10 +424,7 @@ export default {
           );
           // this.orgaTimeChartTop(data)
         } else {
-          this.$message({
-            type: "error",
-            message: res.data.message
-          });
+          messageTip("error",this.$t(res.data.message))
         }
       });
     },
@@ -457,10 +447,7 @@ export default {
           this.tableData = res.data.info.success;
           this.tableData1 = res.data.info.error;
         } else {
-          this.$message({
-            type: "error",
-            message: res.data.message
-          });
+          messageTip("error",this.$t(res.data.message))
         }
       });
     },
