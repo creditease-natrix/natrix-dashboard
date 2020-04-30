@@ -20,7 +20,7 @@
     "echarts": "^4.1.0",
     "element-ui": "^2.3.4",
     "html2canvas": "^1.0.0-alpha.12",
-    "jquery": "^2.2.4",
+    "jquery": "^3.5.0",
     "jspdf": "^1.4.1",
     "module": "^1.2.5",
     "vue": "^2.5.2",
